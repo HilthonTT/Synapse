@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  web.api:
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: .
+      dockerfile: src/backend/Web.Api/Dockerfile
+    ports:
+    - 5000:5000
+    - 5001:5001
+
