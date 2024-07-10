@@ -17,13 +17,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedKernel", "src\backend
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{119F7D0D-481D-467F-ACEA-2D754FBBAEB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\backend\Infrastructure\Infrastructure.csproj", "{819BFB5F-34EB-4E0C-811F-BFFF5A844394}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\backend\Infrastructure\Infrastructure.csproj", "{819BFB5F-34EB-4E0C-811F-BFFF5A844394}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\backend\Application\Application.csproj", "{E1C9587F-B9B6-45A6-A93E-E3968F2E6CDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\backend\Application\Application.csproj", "{E1C9587F-B9B6-45A6-A93E-E3968F2E6CDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Infrastructure", "src\backend\Modules\Users\Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj", "{CD7B59D4-998C-4612-A481-24E328DBAE3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Users.Infrastructure", "src\backend\Modules\Users\Modules.Users.Infrastructure\Modules.Users.Infrastructure.csproj", "{CD7B59D4-998C-4612-A481-24E328DBAE3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Users.Application", "src\backend\Modules\Users\Modules.Users.Application\Modules.Users.Application.csproj", "{ACC1BC2E-7163-4221-AB16-41E7A115F3E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Users.Application", "src\backend\Modules\Users\Modules.Users.Application\Modules.Users.Application.csproj", "{ACC1BC2E-7163-4221-AB16-41E7A115F3E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Posts", "Posts", "{601AE7AC-58CF-4D62-B039-8306E21D182A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Posts.Domain", "src\backend\Modules\Posts\Modules.Posts.Domain\Modules.Posts.Domain.csproj", "{77118C0F-E7D4-441A-BCB5-05FA30DA08C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,10 @@ Global
 		{ACC1BC2E-7163-4221-AB16-41E7A115F3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACC1BC2E-7163-4221-AB16-41E7A115F3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACC1BC2E-7163-4221-AB16-41E7A115F3E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77118C0F-E7D4-441A-BCB5-05FA30DA08C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77118C0F-E7D4-441A-BCB5-05FA30DA08C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77118C0F-E7D4-441A-BCB5-05FA30DA08C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77118C0F-E7D4-441A-BCB5-05FA30DA08C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +85,8 @@ Global
 		{E1C9587F-B9B6-45A6-A93E-E3968F2E6CDF} = {BC56D340-6363-4190-9E07-FB5C52CE06EC}
 		{CD7B59D4-998C-4612-A481-24E328DBAE3E} = {7924D17F-820F-4D1F-B87C-86D0035F561D}
 		{ACC1BC2E-7163-4221-AB16-41E7A115F3E6} = {7924D17F-820F-4D1F-B87C-86D0035F561D}
+		{601AE7AC-58CF-4D62-B039-8306E21D182A} = {A56788AB-6CBA-4608-A345-C50F2DE8FF49}
+		{77118C0F-E7D4-441A-BCB5-05FA30DA08C2} = {601AE7AC-58CF-4D62-B039-8306E21D182A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {277760D7-7623-47DD-99F0-7CB59403B963}
