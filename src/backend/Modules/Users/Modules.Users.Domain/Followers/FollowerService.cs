@@ -10,7 +10,7 @@ public sealed class FollowerService(
     public async Task<Result<Follower>> StartFollowingAsync(
         User user, 
         User followed, 
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         if (user.Id == followed.Id)
         {
@@ -24,6 +24,25 @@ public sealed class FollowerService(
         }
 
         var follower = Follower.Create(user.Id, followed.Id, dateTimeProvider.UtcNow);
+
+        return follower;
+    }
+
+    public async Task<Result<Follower>> StopFollowingAsync(
+        User user, 
+        User followed, 
+        CancellationToken cancellationToken = default)
+    {
+        if (user.Id == followed.Id)
+        {
+            return Result.Failure<Follower>(FollowerErrors.SameUser);
+        }
+
+        Follower? follower = await followerRepository.GetAsync(user.Id, followed.Id, cancellationToken);
+        if (follower is null)
+        {
+            return Result.Failure<Follower>(FollowerErrors.NotFollowing);
+        }
 
         return follower;
     }

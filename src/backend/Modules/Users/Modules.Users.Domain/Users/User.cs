@@ -2,7 +2,7 @@
 
 namespace Modules.Users.Domain.Users;
 
-public sealed class User : Entity
+public sealed class User : Entity, IAuditableEntity
 {
     private User(
         Guid id, 
@@ -34,6 +34,10 @@ public sealed class User : Entity
 
     public string ImageUrl { get; private set; }
 
+    public DateTime CreatedOnUtc { get; set; }
+
+    public DateTime? ModifiedOnUtc { get; set; }
+
     public static User Create(
         ObjectIdentifier objectIdentifier, 
         Name name, 
@@ -52,5 +56,13 @@ public sealed class User : Entity
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
 
         return user;
+    }
+
+    public void Update(Name name, Username username, Email email, string imageUrl)
+    {
+        Name = name;
+        Username = username;
+        Email = email;
+        ImageUrl = imageUrl;
     }
 }

@@ -6,18 +6,33 @@ namespace Modules.Users.Infrastructure.Repositories;
 
 internal sealed class FollowerRepository(UsersDbContext context) : IFollowerRepository
 {
-    public void Insert(Follower follower)
-    {
-        context.Followers.Add(follower);
-    }
-
     public Task<bool> IsAlreadyFollowingAsync(
-        Guid userId, 
-        Guid followedId, 
+        Guid userId,
+        Guid followedId,
         CancellationToken cancellationToken = default)
     {
         return context.Followers.AnyAsync(
             f => f.UserId == userId && f.FollowedId == followedId,
             cancellationToken);
+    }
+
+    public Task<Follower?> GetAsync(
+        Guid userId,
+        Guid followedId, 
+        CancellationToken cancellationToken = default)
+    {
+        return context.Followers.FirstOrDefaultAsync(
+            f => f.UserId == userId && f.FollowedId == followedId,
+            cancellationToken);
+    }
+
+    public void Insert(Follower follower)
+    {
+        context.Followers.Add(follower);
+    }
+
+    public void Remove(Follower follower)
+    {
+        context.Followers.Remove(follower);
     }
 }

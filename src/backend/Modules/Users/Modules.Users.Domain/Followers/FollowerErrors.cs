@@ -6,13 +6,13 @@ public static class FollowerErrors
 {
     public static readonly Error SameUser = Error.Problem(
        "Followers.SameUser",
-       "Can't follow yourself");
-
-    public static readonly Error NonPublicProfile = Error.NotFound(
-        "Followers.NonPublicProfile",
-        "Can't follow non-public profiles");
+       "Can't follow yourself or unfollow yourself");
 
     public static readonly Error AlreadyFollowing = Error.Conflict(
         "Followers.AlreadyFollowing",
         "Already following");
+
+    public static readonly Error NotFollowing = Error.Conflict(
+       "Followers.NotFollowing",
+       "Can't unfollow someone you don't follow");
 }

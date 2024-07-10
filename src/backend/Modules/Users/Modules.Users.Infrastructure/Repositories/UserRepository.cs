@@ -20,4 +20,9 @@ internal sealed class UserRepository(UsersDbContext context) : IUserRepository
     {
         return !await context.Users.AnyAsync(u => u.Email == email, cancellationToken);
     }
+
+    public async Task<bool> IsOidUniqueAsync(ObjectIdentifier objectIdentifier, CancellationToken cancellationToken = default)
+    {
+        return !await context.Users.AnyAsync(u => u.ObjectIdentifier == objectIdentifier, cancellationToken);
+    }
 }

@@ -1,9 +1,11 @@
 ﻿using Infrastructure.Constants;
+using Infrastructure.Database.Interceptors;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
@@ -18,6 +20,8 @@ public static class DependencyInjection
         this IServiceCollection services, 
         IConfiguration configuration)
     {
+        services.TryAddSingleton<UpdateAuditableEntitiesInterceptor>();
+
         string connectionString = configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database);
 
         services.AddDbContext<UsersDbContext>(
@@ -29,6 +33,9 @@ public static class DependencyInjection
                 });
 
                 options.UseSnakeCaseNamingConvention();
+
+                options.AddInterceptors(
+                    sp.GetRequiredService<UpdateAuditableEntitiesInterceptor>());
             });
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
