@@ -10,11 +10,12 @@ public static class UserQueries
         const string sql =
             """
             SELECT
-                u.id as Id,
-                u.name as Name,
-                u.username as Username,
-                u.created_on_utc as CreatedOnUtc,
-                u.modified_on_utc as ModifiedOnUtc
+                u.id AS Id,
+                u.name AS Name,
+                u.username AS Username,
+                u.image_url AS ImageUrl,
+                u.created_on_utc AS CreatedOnUtc,
+                u.modified_on_utc AS ModifiedOnUtc
             FROM users.users u
             """;
 
@@ -30,11 +31,12 @@ public static class UserQueries
         const string sql =
             """
             SELECT
-                u.id as Id,
-                u.name as Name,
-                u.username as Username,
-                u.created_on_utc as CreatedOnUtc,
-                u.modified_on_utc as ModifiedOnUtc
+                u.id AS Id,
+                u.name AS Name,
+                u.username AS Username,
+                u.image_url AS ImageUrl,
+                u.created_on_utc AS CreatedOnUtc,
+                u.modified_on_utc AS ModifiedOnUtc
             FROM users.users u
             WHERE u.id = @UserId
             """;

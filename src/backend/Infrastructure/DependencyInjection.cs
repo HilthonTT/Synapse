@@ -17,7 +17,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-
+       
         AddDatabase(services, configuration);
 
         return services;

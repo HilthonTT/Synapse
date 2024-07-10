@@ -9,4 +9,6 @@ public interface IUserRepository
     Task<bool> IsOidUniqueAsync(ObjectIdentifier objectIdentifier, CancellationToken cancellationToken = default);
 
     void Insert(User user);
+
+    Task<User?> GetByOidAsync(ObjectIdentifier objectIdentifier, CancellationToken cancellationToken = default);
 }

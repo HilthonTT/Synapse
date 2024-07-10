@@ -11,6 +11,11 @@ internal sealed class UserRepository(UsersDbContext context) : IUserRepository
         return context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
     }
 
+    public Task<User?> GetByOidAsync(ObjectIdentifier objectIdentifier, CancellationToken cancellationToken = default)
+    {
+        return context.Users.FirstOrDefaultAsync(u => u.ObjectIdentifier == objectIdentifier, cancellationToken);
+    }
+
     public void Insert(User user)
     {
         context.Users.Add(user);

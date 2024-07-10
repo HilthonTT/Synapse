@@ -16,4 +16,8 @@ public static class UserErrors
     public static readonly Error OidNotUnique = Error.Conflict(
         "Users.OidNotUnique",
         "The provided object identifier is not unique");
+
+    public static readonly Error Unauthorized = Error.Unauthorized(
+        "User.Unauthorized",
+        $"You aren't authorized to access this resource");
 }
