@@ -6,29 +6,30 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Modules.Users.Application.Abstractions.Data;
-using Modules.Users.Domain.Followers;
-using Modules.Users.Domain.Users;
-using Modules.Users.Infrastructure.Database;
-using Modules.Users.Infrastructure.Repositories;
+using Modules.Posts.Application.Abstractions.Data;
+using Modules.Posts.Domain.Comments;
+using Modules.Posts.Domain.Likes;
+using Modules.Posts.Domain.Posts;
+using Modules.Posts.Infrastructure.Database;
+using Modules.Posts.Infrastructure.Repositories;
 
-namespace Modules.Users.Infrastructure;
+namespace Modules.Posts.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddUsersInfrastructure(
-        this IServiceCollection services, 
+    public static IServiceCollection AddPostsInfrastructure(
+        this IServiceCollection services,
         IConfiguration configuration)
     {
         services.TryAddSingleton<UpdateAuditableEntitiesInterceptor>();
 
         string connectionString = configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database);
 
-        services.AddDbContext<UsersDbContext>((sp, options) =>
+        services.AddDbContext<PostsDbContext>((sp, options) =>
         {
             options.UseNpgsql(connectionString, npgsqlOptions =>
             {
-                npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Users);
+                npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Posts);
             });
 
             options.UseSnakeCaseNamingConvention();
@@ -37,10 +38,11 @@ public static class DependencyInjection
                 sp.GetRequiredService<UpdateAuditableEntitiesInterceptor>());
         });
 
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<PostsDbContext>());
 
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IFollowerRepository, FollowerRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<ILikeRepository, LikeRepository>();
 
         return services;
     }

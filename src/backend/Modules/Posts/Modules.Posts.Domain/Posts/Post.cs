@@ -1,4 +1,5 @@
-﻿using Modules.Posts.Domain.Likes;
+﻿using Modules.Posts.Domain.Comments;
+using Modules.Posts.Domain.Likes;
 using SharedKernel;
 
 namespace Modules.Posts.Domain.Posts;
@@ -38,6 +39,8 @@ public sealed class Post : Entity, IAuditableEntity
     public IReadOnlyList<string> Tags => [.. _tags];
 
     public List<Like> Likes { get; private set; } = [];
+
+    public List<Comment> Comments { get; private set; } = [];
 
     public DateTime CreatedOnUtc { get; set; }
 
@@ -102,6 +105,29 @@ public sealed class Post : Entity, IAuditableEntity
         }
 
         Likes.Remove(existingLike);
+
+        return Result.Success();
+    }
+
+
+    public Result AddComment(Guid userId, string content)
+    {
+        var comment = Comment.Create(Id, userId, content);
+
+        Comments.Add(comment);
+
+        return Result.Success();
+    }
+
+    public Result RemoveComment(Guid commentId)
+    {
+        Comment? existingComment = Comments.FirstOrDefault(l => l.Id == commentId);
+        if (existingComment is null)
+        {
+            return Result.Failure(CommentErrors.NotFound(commentId));
+        }
+
+        Comments.Remove(existingComment);
 
         return Result.Success();
     }
