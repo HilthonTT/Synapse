@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Modules.Users.Api;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
+using Modules.Users.Infrastructure.Api;
 using Modules.Users.Infrastructure.Database;
 using Modules.Users.Infrastructure.Repositories;
 
@@ -41,6 +43,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFollowerRepository, FollowerRepository>();
+
+        services.AddScoped<IUsersApi, UsersApi>();
 
         return services;
     }
