@@ -10,3 +10,14 @@ services:
     - 5000:5000
     - 5001:5001
 
+  synapse-database:
+    image: postgres:latest
+    container_name: synapse.database
+    environment:
+      - POSTGRES_DB=synapse
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432

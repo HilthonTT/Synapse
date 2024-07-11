@@ -8,20 +8,20 @@ public sealed class Post : Entity, IAuditableEntity
 {
     public const int TagsMaxCount = 10;
 
-    private readonly List<string> _tags = [];
-
     private Post(
         Guid id, 
         Guid userId,
         string title, 
         string imageUrl, 
-        string? location) 
+        string? location,
+        string? tags) 
         : base(id)
     {
         UserId = userId;
         Title = title;
         ImageUrl = imageUrl;
         Location = location;
+        Tags = tags;
     }
 
     private Post()
@@ -36,7 +36,7 @@ public sealed class Post : Entity, IAuditableEntity
 
     public string? Location { get; private set; }
 
-    public IReadOnlyList<string> Tags => [.. _tags];
+    public string? Tags { get; set; }
 
     public List<Like> Likes { get; private set; } = [];
 
@@ -46,39 +46,13 @@ public sealed class Post : Entity, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; set; }
 
-    public static Post Create(Guid userId, string title, string imageUrl, string? location)
+    public static Post Create(Guid userId, string title, string imageUrl, string? location, string? tags)
     {
-        var post = new Post(Guid.NewGuid(), userId, title, imageUrl, location);
+        var post = new Post(Guid.NewGuid(), userId, title, imageUrl, location, tags);
 
         post.RaiseDomainEvent(new PostCreatedDomainEvent(post.Id));
 
         return post;
-    }
-
-    public Result AddTag(string tag)
-    {
-        if (_tags.Count > TagsMaxCount)
-        {
-            return Result.Failure(PostErrors.TagsMaxCount);
-        }
-
-        _tags.Add(tag);
-
-        return Result.Success();
-    }
-
-    public Result RemoveTag(string tag)
-    {
-        string? existingTag = _tags.FirstOrDefault(t => t == tag);
-
-        if (string.IsNullOrWhiteSpace(existingTag))
-        {
-            return Result.Failure(TagErrors.NotFound(tag));
-        }
-
-        _tags.Remove(existingTag);
-
-        return Result.Success();
     }
 
     public Result AddLike(Guid userId)

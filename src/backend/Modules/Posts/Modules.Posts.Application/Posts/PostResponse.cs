@@ -1,3 +1,12 @@
-﻿namespace Modules.Posts.Application.Posts;
+﻿using Modules.Posts.Application.Comments;
+using Modules.Posts.Application.Likes;
 
-public sealed record PostResponse();
+namespace Modules.Posts.Application.Posts;
+
+public sealed record PostResponse(
+    Guid Id, 
+    string Title, 
+    string ImageUrl, 
+    List<string> Tags, 
+    List<CommentResponse> Comments, 
+    List<LikeResponse> Likes);

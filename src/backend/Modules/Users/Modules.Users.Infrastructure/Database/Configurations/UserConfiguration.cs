@@ -10,24 +10,46 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
 
-        builder.ComplexProperty(
+        // Configure ObjectIdentifier as a value object
+        builder.OwnsOne(
             u => u.ObjectIdentifier,
-            b => b.Property(e => e.Value).HasColumnName("object_identifier"));
+            b =>
+            {
+                b.Property(e => e.Value)
+                 .HasColumnName("object_identifier")
+                 .IsRequired();
+                b.HasIndex(e => e.Value).IsUnique();
+            });
 
-        builder.ComplexProperty(
+        // Configure Username as a value object
+        builder.OwnsOne(
             u => u.Username,
-            b => b.Property(e => e.Value).HasColumnName("username"));
+            b =>
+            {
+                b.Property(e => e.Value)
+                 .HasColumnName("username")
+                 .IsRequired();
+            });
 
-        builder.ComplexProperty(
+        // Configure Email as a value object
+        builder.OwnsOne(
             u => u.Email,
-            b => b.Property(e => e.Value).HasColumnName("email"));
+            b =>
+            {
+                b.Property(e => e.Value)
+                 .HasColumnName("email")
+                 .IsRequired();
+                b.HasIndex(e => e.Value).IsUnique();
+            });
 
-        builder.ComplexProperty(
+        // Configure Name as a value object
+        builder.OwnsOne(
             u => u.Name,
-            b => b.Property(e => e.Value).HasColumnName("name"));
-
-        builder.HasIndex(u => u.Email.Value).IsUnique();
-
-        builder.HasIndex(u => u.ObjectIdentifier.Value).IsUnique();
+            b =>
+            {
+                b.Property(e => e.Value)
+                 .HasColumnName("name")
+                 .IsRequired();
+            });
     }
 }
