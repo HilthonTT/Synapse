@@ -1,4 +1,5 @@
-﻿using SharedKernel;
+﻿using Modules.Posts.Domain.Likes;
+using SharedKernel;
 
 namespace Modules.Posts.Domain.Posts;
 
@@ -34,7 +35,9 @@ public sealed class Post : Entity, IAuditableEntity
 
     public string? Location { get; private set; }
 
-    public List<string> Tags => [.. _tags];
+    public IReadOnlyList<string> Tags => [.. _tags];
+
+    public List<Like> Likes { get; private set; } = [];
 
     public DateTime CreatedOnUtc { get; set; }
 
@@ -51,26 +54,54 @@ public sealed class Post : Entity, IAuditableEntity
 
     public Result AddTag(string tag)
     {
-        if (Tags.Count > TagsMaxCount)
+        if (_tags.Count > TagsMaxCount)
         {
             return Result.Failure(PostErrors.TagsMaxCount);
         }
 
-        Tags.Add(tag);
+        _tags.Add(tag);
 
         return Result.Success();
     }
 
     public Result RemoveTag(string tag)
     {
-        string? existingTag = Tags.FirstOrDefault(t => t == tag);
+        string? existingTag = _tags.FirstOrDefault(t => t == tag);
 
         if (string.IsNullOrWhiteSpace(existingTag))
         {
             return Result.Failure(TagErrors.NotFound(tag));
         }
 
-        Tags.Remove(existingTag);
+        _tags.Remove(existingTag);
+
+        return Result.Success();
+    }
+
+    public Result AddLike(Guid userId)
+    {
+        Like? existingLike = Likes.FirstOrDefault(l => l.UserId == userId);
+        if (existingLike is not null)
+        {
+            return Result.Failure(LikeErrors.AlreadyLiked);
+        }
+
+        var like = Like.Create(Id, userId);
+
+        Likes.Add(like);
+
+        return Result.Success();
+    }
+
+    public Result RemoveLike(Guid userId)
+    {
+        Like? existingLike = Likes.FirstOrDefault(l => l.UserId == userId);
+        if (existingLike is null)
+        {
+            return Result.Failure(LikeErrors.NotFound(userId));
+        }
+
+        Likes.Remove(existingLike);
 
         return Result.Success();
     }
