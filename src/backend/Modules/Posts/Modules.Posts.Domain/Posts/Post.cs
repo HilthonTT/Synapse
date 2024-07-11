@@ -46,6 +46,19 @@ public sealed class Post : Entity, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; set; }
 
+    
+    public void Update(
+        string title,
+        string imageUrl,
+        string? location,
+        string? tags)
+    {
+        Title = title;
+        ImageUrl = imageUrl;
+        Location = location;
+        Tags = tags;
+    }
+
     public static Post Create(Guid userId, string title, string imageUrl, string? location, string? tags)
     {
         var post = new Post(Guid.NewGuid(), userId, title, imageUrl, location, tags);

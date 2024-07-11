@@ -8,10 +8,12 @@ namespace Modules.Posts.Application.Posts.Get;
 internal sealed class GetPostsQueryHandler(IDbConnectionFactory factory) 
     : IQueryHandler<GetPostsQuery, List<PostResponse>>
 {
-    public Task<Result<List<PostResponse>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<PostResponse>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         using IDbConnection connection = factory.GetOpenConnection();
 
-        return null;
+        List<PostResponse> posts = await PostQueries.GetAsync(connection);
+
+        return posts;
     }
 }

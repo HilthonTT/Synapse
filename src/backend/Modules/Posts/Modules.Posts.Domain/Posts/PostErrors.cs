@@ -4,7 +4,7 @@ namespace Modules.Posts.Domain.Posts;
 
 public static class PostErrors
 {
-    public static readonly Error TagsMaxCount = Error.Problem(
-        "Post.TagsMaxCount",
-        $"You can't add more than {Post.TagsMaxCount} tags to your post");
+    public static Error NotFound(Guid id) => Error.NotFound(
+        "Post.NotFound",
+        $"Post with the Id = '{id}' was not found");
 }

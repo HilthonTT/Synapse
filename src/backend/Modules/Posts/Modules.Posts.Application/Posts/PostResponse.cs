@@ -7,6 +7,6 @@ public sealed record PostResponse(
     Guid Id, 
     string Title, 
     string ImageUrl, 
-    List<string> Tags, 
+    string Tags,
     List<CommentResponse> Comments, 
     List<LikeResponse> Likes);
