@@ -8,7 +8,16 @@ internal sealed class PostRepository(PostsDbContext context) : IPostRepository
 {
     public Task<Post?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return context.Posts.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+        return context.Posts
+            .Include(p => p.Likes)
+            .Include(p => p.Comments)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Posts.AnyAsync(p => p.Id == id, cancellationToken);
     }
 
     public void Insert(Post post)

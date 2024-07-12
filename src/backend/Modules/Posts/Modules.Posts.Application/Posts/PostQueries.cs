@@ -1,6 +1,4 @@
 ﻿using Dapper;
-using Modules.Posts.Application.Comments;
-using Modules.Posts.Application.Likes;
 using Modules.Users.Api;
 using System.Data;
 
@@ -17,52 +15,41 @@ public static class PostQueries
                 p.title AS Title,
                 p.image_url AS ImageUrl,
                 p.tags AS Tags,
-                c.id AS CommentId,
-                c.post_id AS PostId,
-                c.user_id AS UserId,
-                c.created_on_utc AS CreatedOnUtc,
-                c.modified_on_utc AS ModifiedOnUtc,
                 u.id AS UserId,
-                u.name AS UserName,
-                u.username AS UserUsername,
-                u.image_url AS UserImageUrl,
-                l.post_id AS PostId,
-                l.user_id AS LikeUserId
+                u.name AS Name,
+                u.username AS Username,
+                u.image_url AS ImageUrl,
+                (
+                    SELECT COUNT(*)
+                    FROM posts.likes l
+                    WHERE l.post_id = p.id
+                ) AS LikesCount,
+                (
+                    SELECT COUNT(*)
+                    FROM posts.comments c
+                    WHERE c.post_id = p.id
+                ) AS CommentsCount
             FROM posts.posts p
-            LEFT JOIN posts.comments c ON c.post_id = p.id
-            LEFT JOIN users.users u ON u.id = c.user_id
-            LEFT JOIN posts.likes l ON l.post_id = p.id
+            LEFT JOIN users.users u ON u.id = p.user_id;
             """;
 
-        var postDictionary = new Dictionary<Guid, PostResponse>();
-
-        IEnumerable<PostResponse> result = 
-            await connection.QueryAsync<PostResponse, CommentResponse, UserResponse, LikeResponse, PostResponse>(
+        IEnumerable<PostResponse> posts = await connection.QueryAsync<PostResponse, UserResponse, PostResponse>(
             sql,
-            (post, comment, user, like) =>
+            (post, user) =>
             {
-                if (!postDictionary.TryGetValue(post.Id, out var currentPost))
-                {
-                    currentPost = new PostResponse(post.Id, post.Title, post.ImageUrl, post.Tags, [], []);
-                    postDictionary.Add(post.Id, currentPost);
-                }
-
-                if (comment is not null)
-                {
-                    comment = comment with { User = user };
-                    currentPost.Comments.Add(comment);
-                }
-
-                if (like is not null)
-                {
-                    currentPost.Likes.Add(like);
-                }
-
-                return currentPost;
+                return new PostResponse(
+                    post.Id,
+                    post.Title,
+                    post.ImageUrl,
+                    post.Tags,
+                    user,
+                    post.LikesCount,
+                    post.CommentsCount
+                );
             },
-            splitOn: "CommentId,UserId,PostId");
+            splitOn: "UserId");
 
-        return [.. postDictionary.Values];
+        return posts.ToList();
     }
 
     public static async Task<PostResponse?> GetByIdAsync(
@@ -76,57 +63,42 @@ public static class PostQueries
                 p.title AS Title,
                 p.image_url AS ImageUrl,
                 p.tags AS Tags,
-                c.id AS CommentId,
-                c.post_id AS PostId,
-                c.user_id AS UserId,
-                c.created_on_utc AS CreatedOnUtc,
-                c.modified_on_utc AS ModifiedOnUtc,
                 u.id AS UserId,
-                u.name AS UserName,
-                u.username AS UserUsername,
-                u.image_url AS UserImageUrl,
-                l.post_id AS PostId,
-                l.user_id AS LikeUserId
+                u.name AS Name,
+                u.username AS Username,
+                u.image_url AS ImageUrl,
+                (
+                    SELECT COUNT(*)
+                    FROM posts.likes l
+                    WHERE l.post_id = p.id
+                ) AS LikesCount,
+                (
+                    SELECT COUNT(*)
+                    FROM posts.comments c
+                    WHERE c.post_id = p.id
+                ) AS CommentsCount
             FROM posts.posts p
-            LEFT JOIN posts.comments c ON c.post_id = p.id
-            LEFT JOIN users.users u ON u.id = c.user_id
-            LEFT JOIN posts.likes l ON l.post_id = p.id
-            WHERE p.id = @PostId
+            LEFT JOIN users.users u ON u.id = p.user_id
+            WHERE p.id = @PostId;
             """;
 
-        var postDictionary = new Dictionary<Guid, PostResponse>();
-
-        var result = await connection.QueryAsync<PostResponse, CommentResponse, UserResponse, LikeResponse, PostResponse>(
+        IEnumerable<PostResponse> posts = await connection.QueryAsync<PostResponse, UserResponse, PostResponse>(
             sql,
-            (post, comment, user, like) =>
+            (post, user) =>
             {
-                if (!postDictionary.TryGetValue(post.Id, out var currentPost))
-                {
-                    currentPost = new PostResponse(post.Id, post.Title, post.ImageUrl, post.Tags, [], []);
-                    postDictionary.Add(post.Id, currentPost);
-                }
-
-                if (comment is not null)
-                {
-                    comment = comment with { User = user };
-                    currentPost.Comments.Add(comment);
-                }
-
-                if (like is not null)
-                {
-                    currentPost.Likes.Add(like);
-                }
-
-                return currentPost;
+                return new PostResponse(
+                    post.Id,
+                    post.Title,
+                    post.ImageUrl,
+                    post.Tags,
+                    user,
+                    post.LikesCount,
+                    post.CommentsCount
+                );
             },
             new { PostId = postId },
-            splitOn: "CommentId,UserId,PostId");
+            splitOn: "UserId");
 
-        if (!postDictionary.TryGetValue(postId, out PostResponse? post))
-        {
-            return null;
-        }
-
-        return post;
+        return posts.FirstOrDefault();
     }
 }

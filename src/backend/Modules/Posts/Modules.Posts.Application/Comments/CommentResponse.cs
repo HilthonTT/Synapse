@@ -3,7 +3,7 @@
 namespace Modules.Posts.Application.Comments;
 
 public sealed record CommentResponse(
-    Guid CommentId, 
+    Guid Id, 
     Guid PostId,
     UserResponse User, 
     DateTime CreatedOnUtc, 

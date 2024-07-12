@@ -27,7 +27,7 @@ internal sealed class RemovePostCommandHandler(
             return Result.Failure(PostErrors.NotFound(request.PostId));
         }
 
-        if (post.UserId != user.Id)
+        if (post.UserId != user.UserId)
         {
             return Result.Failure(UserErrors.Unauthorized);
         }

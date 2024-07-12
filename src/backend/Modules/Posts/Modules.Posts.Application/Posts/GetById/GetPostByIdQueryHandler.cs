@@ -13,10 +13,9 @@ internal sealed class GetPostByIdQueryHandler(IDbConnectionFactory factory)
         GetPostByIdQuery request, 
         CancellationToken cancellationToken)
     {
-        IDbConnection connection = factory.GetOpenConnection();
+        using IDbConnection connection = factory.GetOpenConnection();
 
         PostResponse? post = await PostQueries.GetByIdAsync(connection, request.PostId);
-
         if (post is null)
         {
             return Result.Failure<PostResponse>(PostErrors.NotFound(request.PostId));

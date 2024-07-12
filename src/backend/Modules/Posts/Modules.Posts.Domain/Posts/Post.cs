@@ -68,54 +68,31 @@ public sealed class Post : Entity, IAuditableEntity
         return post;
     }
 
-    public Result AddLike(Guid userId)
+    public Result<Like> AddLike(Guid userId)
     {
         Like? existingLike = Likes.FirstOrDefault(l => l.UserId == userId);
         if (existingLike is not null)
         {
-            return Result.Failure(LikeErrors.AlreadyLiked);
+            return Result.Failure<Like>(LikeErrors.AlreadyLiked);
         }
 
         var like = Like.Create(Id, userId);
 
         Likes.Add(like);
 
-        return Result.Success();
+        return like;
     }
 
-    public Result RemoveLike(Guid userId)
+    public Result<Like> RemoveLike(Guid userId)
     {
         Like? existingLike = Likes.FirstOrDefault(l => l.UserId == userId);
         if (existingLike is null)
         {
-            return Result.Failure(LikeErrors.NotFound(userId));
+            return Result.Failure<Like>(LikeErrors.NotFound(userId));
         }
 
         Likes.Remove(existingLike);
 
-        return Result.Success();
-    }
-
-
-    public Result AddComment(Guid userId, string content)
-    {
-        var comment = Comment.Create(Id, userId, content);
-
-        Comments.Add(comment);
-
-        return Result.Success();
-    }
-
-    public Result RemoveComment(Guid commentId)
-    {
-        Comment? existingComment = Comments.FirstOrDefault(l => l.Id == commentId);
-        if (existingComment is null)
-        {
-            return Result.Failure(CommentErrors.NotFound(commentId));
-        }
-
-        Comments.Remove(existingComment);
-
-        return Result.Success();
+        return existingLike;
     }
 }

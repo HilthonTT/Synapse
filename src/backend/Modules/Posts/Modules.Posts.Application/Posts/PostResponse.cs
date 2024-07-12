@@ -1,5 +1,4 @@
-﻿using Modules.Posts.Application.Comments;
-using Modules.Posts.Application.Likes;
+﻿using Modules.Users.Api;
 
 namespace Modules.Posts.Application.Posts;
 
@@ -8,5 +7,6 @@ public sealed record PostResponse(
     string Title, 
     string ImageUrl, 
     string Tags,
-    List<CommentResponse> Comments, 
-    List<LikeResponse> Likes);
+    UserResponse Creator,
+    int LikesCount,
+    int CommentsCount);
