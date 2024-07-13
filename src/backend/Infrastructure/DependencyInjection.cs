@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
        
         AddDatabase(services, configuration);
+        AddHealthChecks(services, configuration);
 
         return services;
     }
@@ -29,5 +30,12 @@ public static class DependencyInjection
 
         services.AddSingleton<IDbConnectionFactory>(_ =>
             new DbConnectionFactory(new NpgsqlDataSourceBuilder(connectionString).Build()));
+    }
+
+    private static void AddHealthChecks(IServiceCollection services, IConfiguration configuration)
+    {
+        services
+            .AddHealthChecks()
+            .AddNpgSql(configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database));
     }
 }
