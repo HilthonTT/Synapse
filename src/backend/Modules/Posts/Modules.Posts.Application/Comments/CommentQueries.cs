@@ -11,7 +11,7 @@ public static class CommentQueries
         Guid postId)
     {
         const string sql =
-            """
+             """
             SELECT
                 c.id AS Id,
                 c.post_id AS PostId,
@@ -26,21 +26,28 @@ public static class CommentQueries
             WHERE c.post_id = @PostId;
             """;
 
-        IEnumerable<CommentResponse> comments = await connection.QueryAsync<CommentResponse, UserResponse, CommentResponse>(
-            sql,
-            (comment, user) =>
-            {
-                return new CommentResponse(
-                    comment.Id,
-                    comment.PostId,
-                    user,
-                    comment.CreatedOnUtc,
-                    comment.ModifiedOnUtc
-                );
-            },
-            new { PostId = postId },
-            splitOn: "UserId");
+        IEnumerable<CommentQueryResult> results = await connection.QueryAsync<CommentQueryResult>(
+            sql, 
+            new { PostId = postId });
 
-        return comments.ToList();
+        List<CommentResponse> comments = results.Select(result =>
+        {
+            var userResponse = new UserResponse(
+                result.UserId,
+                result.Name,
+                result.Username,
+                result.ImageUrl
+            );
+
+            return new CommentResponse(
+                result.Id,
+                result.PostId,
+                userResponse,
+                result.CreatedOnUtc,
+                result.ModifiedOnUtc
+            );
+        }).ToList();
+
+        return comments;
     }
 }

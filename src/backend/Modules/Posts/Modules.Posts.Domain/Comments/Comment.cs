@@ -34,4 +34,9 @@ public sealed class Comment : Entity, IAuditableEntity
 
         return comment;
     }
+
+    public void Update(string content)
+    {
+        Content = content;
+    }
 }
