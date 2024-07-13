@@ -1,4 +1,5 @@
-﻿using SharedKernel;
+﻿using Application.Abstractions.Storage;
+using SharedKernel;
 
 namespace Presentation.Extensions;
 

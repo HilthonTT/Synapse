@@ -1,7 +1,10 @@
 ﻿using Application.Abstractions.Data;
+using Application.Abstractions.Storage;
+using Azure.Storage.Blobs;
 using Infrastructure.Constants;
 using Infrastructure.Database;
 using Infrastructure.Extensions;
+using Infrastructure.Storage;
 using Infrastructure.Time;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +23,7 @@ public static class DependencyInjection
        
         AddDatabase(services, configuration);
         AddHealthChecks(services, configuration);
+        AddStorage(services, configuration);
 
         return services;
     }
@@ -37,5 +41,13 @@ public static class DependencyInjection
         services
             .AddHealthChecks()
             .AddNpgSql(configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database));
+    }
+
+    private static void AddStorage(IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionStringOrThrow(ConnectionStringNames.BlobStorage);
+
+        services.AddSingleton<IBlobService, BlobService>();
+        services.AddSingleton(_ => new BlobServiceClient(connectionString));
     }
 }

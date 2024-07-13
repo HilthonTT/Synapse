@@ -30,3 +30,12 @@ services:
     ports:
       - 5341:5341
       - 8081:80
+
+  synapse-blob-storage:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: synapse.blob-storage
+    volumes:
+      - ./.containers/blob_storage/data:/data
+    ports:
+      - "10000:10000"
+    command: "azurite-blob --blobHost 0.0.0.0 -l /data"
