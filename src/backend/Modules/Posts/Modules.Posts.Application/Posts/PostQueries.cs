@@ -6,7 +6,7 @@ namespace Modules.Posts.Application.Posts;
 
 public static class PostQueries
 {
-    public static async Task<List<PostResponse>> GetAsync(IDbConnection connection)
+    public static async Task<List<PostResponse>> GetAsync(IDbConnection connection, Guid? cursor, int limit)
     {
         const string sql =
             """
@@ -18,7 +18,7 @@ public static class PostQueries
                 u.id AS UserId,
                 u.name AS Name,
                 u.username AS Username,
-                u.image_url AS ImageUrl,
+                u.image_url AS UserImageUrl,
                 (
                     SELECT COUNT(*)
                     FROM posts.likes l
@@ -30,26 +30,39 @@ public static class PostQueries
                     WHERE c.post_id = p.id
                 ) AS CommentsCount
             FROM posts.posts p
-            LEFT JOIN users.users u ON u.id = p.user_id;
+            LEFT JOIN users.users u ON u.id = p.user_id
+            WHERE (@Cursor IS NULL OR p.id < @Cursor)
+            ORDER BY p.id DESC
+            LIMIT @Limit;
             """;
 
-        IEnumerable<PostResponse> posts = await connection.QueryAsync<PostResponse, UserResponse, PostResponse>(
-            sql,
-            (post, user) =>
-            {
-                return new PostResponse(
-                    post.Id,
-                    post.Title,
-                    post.ImageUrl,
-                    post.Tags,
-                    user,
-                    post.LikesCount,
-                    post.CommentsCount
-                );
-            },
-            splitOn: "UserId");
+        IEnumerable<PostQueryResult> results = await connection.QueryAsync<PostQueryResult>(
+            sql, 
+            new 
+            { 
+                Cursor = cursor, 
+                Limit = limit 
+            });
 
-        return posts.ToList();
+        List<PostResponse> posts = results.Select(result =>
+        {
+            var userResponse = new UserResponse(
+                result.UserId,
+                result.UserName,
+                result.UserUsername,
+                result.UserImageUrl);
+
+            return new PostResponse(
+                result.Id,
+                result.Title,
+                result.ImageUrl,
+                result.Tags,
+                userResponse,
+                result.LikesCount,
+                result.CommentsCount);
+        }).ToList();
+
+        return posts;
     }
 
     public static async Task<PostResponse?> GetByIdAsync(
@@ -63,10 +76,6 @@ public static class PostQueries
                 p.title AS Title,
                 p.image_url AS ImageUrl,
                 p.tags AS Tags,
-                u.id AS UserId,
-                u.name AS Name,
-                u.username AS Username,
-                u.image_url AS ImageUrl,
                 (
                     SELECT COUNT(*)
                     FROM posts.likes l
@@ -76,29 +85,37 @@ public static class PostQueries
                     SELECT COUNT(*)
                     FROM posts.comments c
                     WHERE c.post_id = p.id
-                ) AS CommentsCount
+                ) AS CommentsCount,
+                u.id AS UserId,
+                u.name AS UserName,
+                u.username AS UserUsername,
+                u.image_url AS UserImageUrl
             FROM posts.posts p
             LEFT JOIN users.users u ON u.id = p.user_id
             WHERE p.id = @PostId;
             """;
 
-        IEnumerable<PostResponse> posts = await connection.QueryAsync<PostResponse, UserResponse, PostResponse>(
-            sql,
-            (post, user) =>
-            {
-                return new PostResponse(
-                    post.Id,
-                    post.Title,
-                    post.ImageUrl,
-                    post.Tags,
-                    user,
-                    post.LikesCount,
-                    post.CommentsCount
-                );
-            },
-            new { PostId = postId },
-            splitOn: "UserId");
+        PostQueryResult? postResult = await connection.QueryFirstOrDefaultAsync<PostQueryResult>(
+            sql, 
+            new { PostId = postId });
+        if (postResult is null)
+        {
+            return null;
+        }
 
-        return posts.FirstOrDefault();
+        var userResponse = new UserResponse(
+            postResult.UserId,
+            postResult.UserName,
+            postResult.UserUsername,
+            postResult.UserImageUrl);
+
+        return new PostResponse(
+            postResult.Id,
+            postResult.Title,
+            postResult.ImageUrl,
+            postResult.Tags,
+            userResponse,
+            postResult.LikesCount,
+            postResult.CommentsCount);
     }
 }

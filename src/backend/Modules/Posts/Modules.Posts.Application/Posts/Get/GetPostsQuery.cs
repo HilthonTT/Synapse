@@ -2,4 +2,4 @@
 
 namespace Modules.Posts.Application.Posts.Get;
 
-public sealed record GetPostsQuery() : IQuery<List<PostResponse>>;
+public sealed record GetPostsQuery(Guid? Cursor, int Limit = 15) : IQuery<List<PostResponse>>;

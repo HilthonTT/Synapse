@@ -12,7 +12,7 @@ internal sealed class GetPostsQueryHandler(IDbConnectionFactory factory)
     {
         using IDbConnection connection = factory.GetOpenConnection();
 
-        List<PostResponse> posts = await PostQueries.GetAsync(connection);
+        List<PostResponse> posts = await PostQueries.GetAsync(connection, request.Cursor, request.Limit);
 
         return posts;
     }
