@@ -40,7 +40,7 @@ export const LeftSidebar = () => {
               <li
                 key={href}
                 className={cn(
-                  "rounded-lg text-sm hover:bg-neutral-900 transition gap-3",
+                  "sidebar-link",
                   isActive && "bg-neutral-900 hover:bg-neutral-800"
                 )}>
                 <Link href={href} className="flex gap-4 items-center p-3">
@@ -55,7 +55,7 @@ export const LeftSidebar = () => {
           {isLoaded && isSignedIn && (
             <li
               className={cn(
-                "rounded-lg text-sm hover:bg-neutral-900 transition gap-3",
+                "sidebar-link",
                 pathname === "/profile" && "bg-neutral-900 hover:bg-neutral-800"
               )}>
               <Link href="/profile" className="flex gap-4 items-center p-3">
@@ -71,7 +71,7 @@ export const LeftSidebar = () => {
           )}
 
           {!isLoaded && (
-            <li className="rounded-lg text-sm transition gap-3 p-3 flex items-center">
+            <li className="sidebar-link">
               <Loader />
               <Skeleton className="h-7 w-24" />
             </li>

@@ -1,3 +1,4 @@
+import { BottomBar } from "@/components/bottom-bar";
 import { LeftSidebar } from "@/components/left-sidebar";
 
 type Props = {
@@ -10,6 +11,8 @@ const RootLayout = ({ children }: Props) => {
       <LeftSidebar />
 
       <div className="flex flex-1 h-full">{children}</div>
+
+      <BottomBar />
     </div>
   );
 };
