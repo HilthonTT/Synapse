@@ -6,6 +6,10 @@ import {
   IconCirclePlus,
 } from "@tabler/icons-react";
 
+export const BaseApiUrl = process.env.BASE_API_URL!;
+
+export const jwtTemplate = process.env.CLERK_TEMPLATE!;
+
 export const LeftSidebarLinks: NavLink[] = [
   {
     href: "/",
@@ -26,11 +30,6 @@ export const LeftSidebarLinks: NavLink[] = [
     href: "/people",
     label: "People",
     icon: IconUsers,
-  },
-  {
-    href: "/create",
-    label: "Create",
-    icon: IconCirclePlus,
   },
 ];
 

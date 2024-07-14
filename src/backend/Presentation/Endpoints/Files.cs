@@ -22,6 +22,7 @@ internal sealed class Files : IEndpoint
 
             return Results.Ok(fileId);
         })
+        .RequireAuthorization()
         .DisableAntiforgery()
         .WithTags(Tags.Files);
 
@@ -45,6 +46,7 @@ internal sealed class Files : IEndpoint
 
             return Results.NoContent();
         })
+        .RequireAuthorization()
         .WithTags(Tags.Files);
     }
 }

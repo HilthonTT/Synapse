@@ -13,7 +13,9 @@ internal sealed class UserRepository(UsersDbContext context) : IUserRepository
 
     public Task<User?> GetByOidAsync(ObjectIdentifier objectIdentifier, CancellationToken cancellationToken = default)
     {
-        return context.Users.FirstOrDefaultAsync(u => u.ObjectIdentifier == objectIdentifier, cancellationToken);
+        return context.Users.FirstOrDefaultAsync(
+            u => u.ObjectIdentifier.Value == objectIdentifier.Value, 
+            cancellationToken);
     }
 
     public void Insert(User user)
@@ -23,11 +25,13 @@ internal sealed class UserRepository(UsersDbContext context) : IUserRepository
 
     public async Task<bool> IsEmailUniqueAsync(Email email, CancellationToken cancellationToken = default)
     {
-        return !await context.Users.AnyAsync(u => u.Email == email, cancellationToken);
+        return !await context.Users.AnyAsync(u => u.Email.Value == email.Value, cancellationToken);
     }
 
     public async Task<bool> IsOidUniqueAsync(ObjectIdentifier objectIdentifier, CancellationToken cancellationToken = default)
     {
-        return !await context.Users.AnyAsync(u => u.ObjectIdentifier == objectIdentifier, cancellationToken);
+        return !await context.Users.AnyAsync(
+            u => u.ObjectIdentifier.Value == objectIdentifier.Value,
+            cancellationToken);
     }
 }

@@ -10,6 +10,7 @@ import { LeftSidebarLinks } from "@/constants";
 import { Loader } from "@/components/loader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spotlight } from "@/components/ui/spotlight";
+import { CreatePostModal } from "@/components/modals/create-post-modal";
 
 export const LeftSidebar = () => {
   const pathname = usePathname();
@@ -52,6 +53,8 @@ export const LeftSidebar = () => {
             );
           })}
 
+          <CreatePostModal />
+
           {isLoaded && isSignedIn && (
             <li
               className={cn(
@@ -71,7 +74,7 @@ export const LeftSidebar = () => {
           )}
 
           {!isLoaded && (
-            <li className="sidebar-link">
+            <li className="sidebar-link flex p-3">
               <Loader />
               <Skeleton className="h-7 w-24" />
             </li>

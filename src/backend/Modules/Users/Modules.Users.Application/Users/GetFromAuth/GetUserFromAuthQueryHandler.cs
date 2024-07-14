@@ -52,7 +52,7 @@ internal sealed class GetUserFromAuthQueryHandler(
 
     private static string GetClaimValue(List<Claim> claims, string claimType)
     {
-        return claims.FirstOrDefault(c => c.Type == claimType)?.Value ?? string.Empty;
+        return claims.FirstOrDefault(c => c.Type.Contains(claimType))?.Value ?? string.Empty;
     }
 
     private async Task<User> CleanUserAsync(
@@ -64,7 +64,7 @@ internal sealed class GetUserFromAuthQueryHandler(
 
         string name = GetClaimValue(claims, "name");
         string username = GetClaimValue(claims, "username");
-        string email = GetClaimValue(claims, "email");
+        string email = GetClaimValue(claims, "emailaddress");
         string imageUrl = GetClaimValue(claims, "picture");
 
         if (name != user.Name.Value ||
