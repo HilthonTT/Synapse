@@ -29,3 +29,10 @@ declare type Post = {
   likesCount: number;
   commentsCount: number;
 };
+
+declare type NewPost = {
+  title: string;
+  imageUrl: string;
+  location?: string;
+  tags?: string;
+};

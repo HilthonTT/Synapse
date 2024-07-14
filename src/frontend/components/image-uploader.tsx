@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useDropzone, FileWithPath } from "react-dropzone";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useTransition } from "react";
 
 import { uploadFile } from "@/actions/blob";
-import { cn } from "@/lib/utils";
+import { cn, getBase64 } from "@/lib/utils";
 
 type Props = {
   fieldChange: (fileUrl: string) => void;
@@ -13,28 +13,26 @@ type Props = {
   className?: string;
 };
 
-const getBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-
 export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
+  const [pending, startTransition] = useTransition();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [fileUrl, setFileUrl] = useState(imageUrl);
 
   const onDrop = useCallback(
-    async (acceptedFiles: FileWithPath[]) => {
-      const file = acceptedFiles[0];
+    (acceptedFiles: FileWithPath[]) => {
+      startTransition(async () => {
+        const file = acceptedFiles[0];
 
-      const base64 = await getBase64(file);
-      const fileUrl = await uploadFile({ base64, fileName: file.name });
+        const base64 = await getBase64(file);
+        const fileUrl = await uploadFile({ base64, fileName: file.name });
 
-      setFileUrl(fileUrl);
-      fieldChange(fileUrl);
+        if (fileUrl) {
+          setFileUrl(fileUrl);
+          fieldChange(fileUrl);
+        }
+      });
     },
     [fieldChange]
   );
@@ -80,21 +78,26 @@ export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
             alt="logo"
             width={150}
             height={150}
+            className={cn("object-cover", pending && "animate-spin")}
           />
 
-          <div className="text-center">
-            <h3 className="text-sm text-light-2 mb-2 mt-6 tracking-widest">
-              Drag photo here
-            </h3>
-            <p className="text-xs mb-6 tracking-widest">SVG, PNG, JPG</p>
-          </div>
+          {!pending && (
+            <>
+              <div className="text-center">
+                <h3 className="text-sm text-light-2 mb-2 mt-6 tracking-widest">
+                  Drag photo here
+                </h3>
+                <p className="text-xs mb-6 tracking-widest">SVG, PNG, JPG</p>
+              </div>
 
-          <button
-            onClick={handleButtonClick}
-            type="button"
-            className="inline-flex h-12  my-2 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-            Select from Computer
-          </button>
+              <button
+                onClick={handleButtonClick}
+                type="button"
+                className="inline-flex h-12  my-2 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                Select from Computer
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>
