@@ -1,7 +1,9 @@
-﻿using Application.Abstractions.Data;
+﻿using Application.Abstractions.Caching;
+using Application.Abstractions.Data;
 using Application.Abstractions.Storage;
 using Azure.Storage.Blobs;
 using Infrastructure.Authentication;
+using Infrastructure.Caching;
 using Infrastructure.Constants;
 using Infrastructure.Database;
 using Infrastructure.Extensions;
@@ -26,6 +28,7 @@ public static class DependencyInjection
         AddDatabase(services, configuration);
         AddHealthChecks(services, configuration);
         AddStorage(services, configuration);
+        AddCaching(services, configuration);
 
         AddAuthentication(services);
 
@@ -64,5 +67,15 @@ public static class DependencyInjection
             .AddJwtBearer();
 
         services.AddAuthorization();
+    }
+
+    private static void AddCaching(IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionStringOrThrow(ConnectionStringNames.Redis);
+
+        services.AddStackExchangeRedisCache(options =>
+            options.Configuration = connectionString);
+
+        services.AddSingleton<ICacheService, CacheService>();
     }
 }
