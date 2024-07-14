@@ -8,10 +8,18 @@ import { uploadFile } from "@/actions/blob";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  fieldChange: (file: File) => void;
+  fieldChange: (fileUrl: string) => void;
   imageUrl?: string;
   className?: string;
 };
+
+const getBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -22,10 +30,11 @@ export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
     async (acceptedFiles: FileWithPath[]) => {
       const file = acceptedFiles[0];
 
-      fieldChange(file);
-      setFileUrl(URL.createObjectURL(file));
+      const base64 = await getBase64(file);
+      const fileUrl = await uploadFile({ base64, fileName: file.name });
 
-      await uploadFile(file);
+      setFileUrl(fileUrl);
+      fieldChange(fileUrl);
     },
     [fieldChange]
   );
@@ -60,6 +69,7 @@ export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
               className="object-cover rounded-xl"
               width={200}
               height={200}
+              unoptimized
             />
           </div>
         </>

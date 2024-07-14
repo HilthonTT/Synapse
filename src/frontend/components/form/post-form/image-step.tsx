@@ -1,7 +1,12 @@
 "use client";
 
 import { ImageUploader } from "@/components/image-uploader";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -9,7 +14,7 @@ type Props = {
   className?: string;
 };
 
-export const Image = ({ form, className }: Props) => {
+export const ImageStep = ({ form, className }: Props) => {
   return (
     <div className={cn(className)}>
       <FormField
@@ -20,6 +25,8 @@ export const Image = ({ form, className }: Props) => {
             <FormControl>
               <ImageUploader fieldChange={field.onChange} />
             </FormControl>
+
+            <FormMessage />
           </FormItem>
         )}
       />

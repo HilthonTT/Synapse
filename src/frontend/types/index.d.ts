@@ -12,3 +12,20 @@ declare type UserFromAuth = {
   email: string;
   imageUrl: string;
 };
+
+declare type User = {
+  userId: string;
+  name: string;
+  username: string;
+  imageUrl: string;
+};
+
+declare type Post = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  tags: string;
+  creator: User;
+  likesCount: number;
+  commentsCount: number;
+};

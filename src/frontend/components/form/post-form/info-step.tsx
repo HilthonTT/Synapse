@@ -13,7 +13,7 @@ type Props = {
   className?: string;
 };
 
-export const Info = ({ form, className }: Props) => {
+export const InfoStep = ({ form, className }: Props) => {
   return (
     <div className={cn("space-y-4", className)}>
       <FormField
