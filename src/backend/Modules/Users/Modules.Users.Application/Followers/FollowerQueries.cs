@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Modules.Users.Application.Followers.GetFollowerStats;
 using System.Data;
 
 namespace Modules.Users.Application.Followers;

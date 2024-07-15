@@ -8,7 +8,7 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void CommandHandler_ShouldHave_NameEndingWith_CommandHandler()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .ImplementInterface(typeof(ICommandHandler<>))
             .Or()
@@ -23,7 +23,7 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void CommandHandler_Should_NotBePublic()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .ImplementInterface(typeof(ICommandHandler<>))
             .Or()
@@ -38,7 +38,7 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void CommandHandler_Should_BeSealed()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .ImplementInterface(typeof(ICommandHandler<>))
             .Or()
@@ -53,7 +53,7 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void QueryHandler_ShouldHave_NameEndingWith_QueryHandler()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .ImplementInterface(typeof(IQueryHandler<,>))
             .Should()
@@ -66,7 +66,7 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void QueryHandler_Should_NotBePublic()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .ImplementInterface(typeof(IQueryHandler<,>))
             .Should()
@@ -79,7 +79,7 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void QueryHandler_Should_BeSealed()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .ImplementInterface(typeof(IQueryHandler<,>))
             .Should()
@@ -92,11 +92,37 @@ public sealed class ApplicationTests : PostBaseTest
     [Fact]
     public void Validator_ShouldHave_NameEndingWith_Validator()
     {
-        TestResult result = Types.InAssembly(ApplicationAssembly)
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
             .That()
             .Inherit(typeof(AbstractValidator<>))
             .Should()
             .HaveNameEndingWith("Validator")
+            .GetResult();
+
+        result.IsSuccessful.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Validator_Should_BeSealed()
+    {
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
+            .That()
+            .Inherit(typeof(AbstractValidator<>))
+            .Should()
+            .BeSealed()
+            .GetResult();
+
+        result.IsSuccessful.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Validator_Should_NotBePublic()
+    {
+        TestResult result = Types.InAssemblies([ApplicationAssembly, MainApplicationAssembly])
+            .That()
+            .Inherit(typeof(AbstractValidator<>))
+            .Should()
+            .NotBePublic()
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue();

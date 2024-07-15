@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Modules.Users.Application.Followers.GetFollowerStats;
 using SharedKernel;
 using System.Data;
 

@@ -6,7 +6,7 @@ using SharedKernel;
 
 namespace Modules.Users.Application.Followers.StopFollowing;
 
-internal sealed class StopFollowingCommandHandle(
+internal sealed class StopFollowingCommandHandler(
     IUserRepository userRepository,
     IFollowerService followerService,
     IFollowerRepository followerRepository,

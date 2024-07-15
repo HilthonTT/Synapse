@@ -8,6 +8,8 @@ public sealed class LayerTests : UserBaseTest
         TestResult result = Types.InAssembly(DomainAssembly)
             .Should()
             .NotHaveDependencyOn(ApplicationAssembly.GetName().Name)
+            .Or()
+            .NotHaveDependencyOn(MainApplicationAssembly.GetName().Name)
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue();
@@ -19,6 +21,8 @@ public sealed class LayerTests : UserBaseTest
         TestResult result = Types.InAssembly(DomainAssembly)
             .Should()
             .NotHaveDependencyOn(InfrastructureAssembly.GetName().Name)
+            .Or()
+            .NotHaveDependencyOn(MainInfrastructureAssembly.GetName().Name)
             .GetResult();
 
         result.IsSuccessful.Should().BeTrue();
@@ -30,6 +34,8 @@ public sealed class LayerTests : UserBaseTest
         TestResult result = Types.InAssembly(ApplicationAssembly)
            .Should()
            .NotHaveDependencyOn(InfrastructureAssembly.GetName().Name)
+           .Or()
+           .NotHaveDependencyOn(MainInfrastructureAssembly.GetName().Name)
            .GetResult();
 
         result.IsSuccessful.Should().BeTrue();

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Modules.Posts.Application.Comments;
 using Modules.Posts.Application.Comments.GetByPostId;
 using Presentation.Extensions;
 using Presentation.Infrastructure;

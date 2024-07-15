@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Modules.Users.Application.Followers;
 using Modules.Users.Application.Followers.GetFollowerStats;
 using Presentation.Extensions;
 using Presentation.Infrastructure;
