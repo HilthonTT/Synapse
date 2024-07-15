@@ -6,7 +6,10 @@ namespace Modules.Posts.Application.Posts;
 
 public static class PostQueries
 {
-    public static async Task<List<PostResponse>> GetAsync(IDbConnection connection, Guid? cursor, int limit)
+    public static async Task<(List<PostResponse> Posts, Guid? NextCursor)> GetAsync(
+        IDbConnection connection, 
+        Guid? cursor, 
+        int limit)
     {
         const string sql =
             """
@@ -37,11 +40,11 @@ public static class PostQueries
             """;
 
         IEnumerable<PostQueryResult> results = await connection.QueryAsync<PostQueryResult>(
-            sql, 
-            new 
-            { 
-                Cursor = cursor, 
-                Limit = limit 
+            sql,
+            new
+            {
+                Cursor = cursor,
+                Limit = limit
             });
 
         List<PostResponse> posts = results.Select(result =>
@@ -62,7 +65,9 @@ public static class PostQueries
                 result.CommentsCount);
         }).ToList();
 
-        return posts;
+        Guid? nextCursor = posts.Count > 0 ? posts.Last().Id : null;
+
+        return (posts, nextCursor);
     }
 
     public static async Task<PostResponse?> GetByIdAsync(

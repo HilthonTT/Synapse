@@ -23,7 +23,7 @@ internal sealed class Get : IEndpoint
         {
             var query = new GetPostsQuery(cursor, Limit);
 
-            Result<List<PostResponse>> result = await sender.Send(query, cancellationToken);
+            Result<PostsCursorResponse> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })

@@ -6,14 +6,17 @@ using System.Data;
 namespace Modules.Posts.Application.Posts.Get;
 
 internal sealed class GetPostsQueryHandler(IDbConnectionFactory factory) 
-    : IQueryHandler<GetPostsQuery, List<PostResponse>>
+    : IQueryHandler<GetPostsQuery, PostsCursorResponse>
 {
-    public async Task<Result<List<PostResponse>>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PostsCursorResponse>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         using IDbConnection connection = factory.GetOpenConnection();
 
-        List<PostResponse> posts = await PostQueries.GetAsync(connection, request.Cursor, request.Limit);
+        (List<PostResponse> posts, Guid? nextCursor) = 
+            await PostQueries.GetAsync(connection, request.Cursor, request.Limit);
 
-        return posts;
+        var response = new PostsCursorResponse(posts, nextCursor);
+
+        return response;
     }
 }

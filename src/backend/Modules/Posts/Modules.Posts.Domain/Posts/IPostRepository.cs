@@ -1,8 +1,11 @@
-﻿namespace Modules.Posts.Domain.Posts;
+﻿
+namespace Modules.Posts.Domain.Posts;
 
 public interface IPostRepository
 {
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<List<Post>> GetAsync(CancellationToken cancellationToken = default);
 
     Task<Post?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 

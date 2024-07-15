@@ -6,6 +6,11 @@ namespace Modules.Posts.Infrastructure.Repositories;
 
 internal sealed class PostRepository(PostsDbContext context) : IPostRepository
 {
+    public Task<List<Post>> GetAsync(CancellationToken cancellationToken = default)
+    {
+        return context.Posts.ToListAsync(cancellationToken);
+    }
+
     public Task<Post?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return context.Posts
