@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Constants;
 using Infrastructure.Database.Interceptors;
 using Infrastructure.Extensions;
+using Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
 using Modules.Users.Infrastructure.Api;
 using Modules.Users.Infrastructure.Database;
+using Modules.Users.Infrastructure.Outbox;
 using Modules.Users.Infrastructure.Repositories;
 
 namespace Modules.Users.Infrastructure;
@@ -23,6 +25,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.TryAddSingleton<UpdateAuditableEntitiesInterceptor>();
+        services.TryAddSingleton<InsertOutboxMessagesInterceptor>();
 
         string connectionString = configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database);
 
@@ -36,7 +39,8 @@ public static class DependencyInjection
             options.UseSnakeCaseNamingConvention();
 
             options.AddInterceptors(
-                sp.GetRequiredService<UpdateAuditableEntitiesInterceptor>());
+                sp.GetRequiredService<UpdateAuditableEntitiesInterceptor>(),
+                sp.GetRequiredService<InsertOutboxMessagesInterceptor>());
         });
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
@@ -45,6 +49,8 @@ public static class DependencyInjection
         services.AddScoped<IFollowerRepository, FollowerRepository>();
 
         services.AddScoped<IUsersApi, UsersApi>();
+
+        services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 
         return services;
     }

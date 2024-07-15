@@ -2,6 +2,8 @@
 using Application.Abstractions.Data;
 using Application.Abstractions.Storage;
 using Azure.Storage.Blobs;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Infrastructure.Authentication;
 using Infrastructure.Caching;
 using Infrastructure.Constants;
@@ -29,6 +31,7 @@ public static class DependencyInjection
         AddHealthChecks(services, configuration);
         AddStorage(services, configuration);
         AddCaching(services, configuration);
+        AddBackgroundJobs(services, configuration);
 
         AddAuthentication(services);
 
@@ -47,6 +50,7 @@ public static class DependencyInjection
     {
         services
             .AddHealthChecks()
+            .AddRedis(configuration.GetConnectionStringOrThrow(ConnectionStringNames.Redis))
             .AddNpgSql(configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database));
     }
 
@@ -77,5 +81,18 @@ public static class DependencyInjection
             options.Configuration = connectionString);
 
         services.AddSingleton<ICacheService, CacheService>();
+    }
+
+    private static void AddBackgroundJobs(IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionStringOrThrow(ConnectionStringNames.Database);
+
+        services.AddHangfire(config =>
+        {
+            config.UsePostgreSqlStorage(options =>
+                options.UseNpgsqlConnection(connectionString));
+        });
+
+        services.AddHangfireServer(options => options.SchedulePollingInterval = TimeSpan.FromSeconds(1));
     }
 }

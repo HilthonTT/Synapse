@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Database.Configurations;
+using Microsoft.EntityFrameworkCore;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
@@ -15,6 +16,7 @@ public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersDbContext).Assembly);
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         
         modelBuilder.HasDefaultSchema(Schemas.Users);
     }

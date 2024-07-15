@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Database.Configurations;
+using Microsoft.EntityFrameworkCore;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Comments;
 using Modules.Posts.Domain.Likes;
@@ -18,6 +19,7 @@ public sealed class PostsDbContext(DbContextOptions<PostsDbContext> options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PostsDbContext).Assembly);
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
 
         modelBuilder.HasDefaultSchema(Schemas.Posts);
     }
