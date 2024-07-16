@@ -12,6 +12,9 @@ export const useCreatePost = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POSTS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.INFINITE_POSTS],
+      });
     },
   });
 };

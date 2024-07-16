@@ -1,13 +1,14 @@
 "use client";
 
-import { Fragment, useEffect } from "react";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { getInfinitePosts } from "@/lib/react-query/queries";
+import { LayoutGrid } from "@/components/ui/layout-grid";
+import { SearchInput } from "@/components/search-input";
 
 const HomePage = () => {
   const { ref, inView } = useInView();
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     getInfinitePosts();
 
@@ -17,18 +18,22 @@ const HomePage = () => {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  const cards: Card[] =
+    data?.pages.flatMap((page) =>
+      page.posts.map((post, index) => ({
+        id: post.id,
+        content: post.title,
+        className:
+          index === 0 || (index + 1) % 4 === 0 ? "md:col-span-2" : "col-span-1",
+        thumbnail: post.imageUrl,
+      }))
+    ) || [];
+
   return (
-    <div>
-      <h1>Home</h1>
-      {status === "pending" && <p>Loading...</p>}
-      {status === "error" && <p>Error loading posts</p>}
-      {data?.pages.map((page, pageIndex) => (
-        <Fragment key={pageIndex}>
-          {page.posts.map((post) => (
-            <div key={post.id}>{post.title}</div>
-          ))}
-        </Fragment>
-      ))}
+    <div className="flex flex-col flex-1 items-center size-full overflow-y-auto custom-scrollbar">
+      <h2 className="h3-bold md:h2-bold w-full px-5 py-4">Explore posts</h2>
+      <SearchInput />
+      <LayoutGrid cards={cards} />
       <div
         ref={ref}
         style={{ height: "1px", backgroundColor: "transparent" }}

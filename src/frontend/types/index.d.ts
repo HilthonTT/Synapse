@@ -42,3 +42,10 @@ declare type CursorPaginationPost = {
   nextCursor?: string;
   previousCursor?: string;
 };
+
+declare type Card = {
+  id: string;
+  content: string;
+  className: string;
+  thumbnail: string;
+};
