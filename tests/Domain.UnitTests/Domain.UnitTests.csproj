@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\backend\Modules\Posts\Modules.Posts.Domain\Modules.Posts.Domain.csproj" />
     <ProjectReference Include="..\..\src\backend\Modules\Users\Modules.Users.Domain\Modules.Users.Domain.csproj" />
   </ItemGroup>
 
