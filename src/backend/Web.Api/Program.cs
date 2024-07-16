@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Serilog;
 using Hangfire;
+using Presentation.Infrastructure;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,8 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 {
     loggerConfig.ReadFrom.Configuration(context.Configuration);
 });
+
+builder.WebHost.UseSentry();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -33,6 +36,9 @@ builder.Services
     .AddUsersInfrastructure(builder.Configuration)
     .AddPostsInfrastructure(builder.Configuration)
     .AddPresentation();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 WebApplication app = builder.Build();
 
@@ -86,6 +92,12 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseRequestContextLogging();
+
 app.UseSerilogRequestLogging();
 
+app.UseExceptionHandler();
+
 app.Run();
+
+public partial class Program;
