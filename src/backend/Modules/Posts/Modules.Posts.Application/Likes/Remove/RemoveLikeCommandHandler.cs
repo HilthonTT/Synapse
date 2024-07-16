@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Posts;
@@ -12,6 +13,7 @@ internal sealed class RemoveLikeCommandHandler(
     IUsersApi usersApi, 
     ILikeRepository likeRepository, 
     IPostRepository postRepository,
+    IPublisher publisher,
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveLikeCommand>
 {
     public async Task<Result> Handle(RemoveLikeCommand request, CancellationToken cancellationToken)
@@ -39,6 +41,8 @@ internal sealed class RemoveLikeCommandHandler(
         likeRepository.Remove(like);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new LikeRemovedEvent(post.Id), cancellationToken);
 
         return Result.Success();
     }

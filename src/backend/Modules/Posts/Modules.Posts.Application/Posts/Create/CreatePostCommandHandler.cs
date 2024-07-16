@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Posts;
 using Modules.Posts.Domain.Users;
@@ -10,6 +11,7 @@ namespace Modules.Posts.Application.Posts.Create;
 internal sealed class CreatePostCommandHandler(
     IUsersApi usersApi,
     IPostRepository postRepository, 
+    IPublisher publisher,
     IUnitOfWork unitOfWork)
     : ICommandHandler<CreatePostCommand, Guid>
 {
@@ -31,6 +33,8 @@ internal sealed class CreatePostCommandHandler(
         postRepository.Insert(post);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new PostCreatedEvent(post.Id), cancellationToken);
 
         return post.Id;
     }

@@ -21,7 +21,7 @@ export const InfoStep = ({ form, className }: Props) => {
         name="title"
         render={({ field }) => (
           <FormItem className="flex-1 w-full">
-            <FormLabel>Title</FormLabel>
+            <FormLabel>Make up a title</FormLabel>
 
             <FormControl>
               <Input {...field} placeholder="My best holiday!" />
@@ -37,7 +37,9 @@ export const InfoStep = ({ form, className }: Props) => {
         name="tags"
         render={({ field }) => (
           <FormItem className="flex-1 w-full">
-            <FormLabel>Tags</FormLabel>
+            <FormLabel>
+              Add Tags (separated by comma &apos; , &apos; )
+            </FormLabel>
 
             <FormControl>
               <Input {...field} placeholder="Holiday, Trip, Friends" />
@@ -53,7 +55,7 @@ export const InfoStep = ({ form, className }: Props) => {
         name="location"
         render={({ field }) => (
           <FormItem className="flex-1 w-full">
-            <FormLabel>Location</FormLabel>
+            <FormLabel>Add Location</FormLabel>
 
             <FormControl>
               <Input {...field} placeholder="Wall Street" />

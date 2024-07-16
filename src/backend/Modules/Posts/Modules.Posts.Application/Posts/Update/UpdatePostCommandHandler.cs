@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Posts;
 using Modules.Posts.Domain.Users;
@@ -10,6 +11,7 @@ namespace Modules.Posts.Application.Posts.Update;
 internal sealed class UpdatePostCommandHandler(
     IUsersApi usersApi,
     IPostRepository postRepository,
+    IPublisher publisher,
     IUnitOfWork unitOfWork)
     : ICommandHandler<UpdatePostCommand>
 {
@@ -39,6 +41,8 @@ internal sealed class UpdatePostCommandHandler(
             request.Tags);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new PostUpdatedEvent(post.Id), cancellationToken);
 
         return Result.Success();
     }

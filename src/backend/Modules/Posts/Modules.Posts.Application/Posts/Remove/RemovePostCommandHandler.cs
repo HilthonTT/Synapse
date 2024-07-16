@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Posts;
 using Modules.Posts.Domain.Users;
@@ -10,6 +11,7 @@ namespace Modules.Posts.Application.Posts.Remove;
 internal sealed class RemovePostCommandHandler(
     IUsersApi usersApi,
     IPostRepository postRepository, 
+    IPublisher publisher,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RemovePostCommand>
 {
@@ -35,6 +37,8 @@ internal sealed class RemovePostCommandHandler(
         postRepository.Remove(post);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new PostRemovedEvent(post.Id), cancellationToken);
 
         return Result.Success();
     }

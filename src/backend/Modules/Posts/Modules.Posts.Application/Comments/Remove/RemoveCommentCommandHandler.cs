@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Comments;
 using Modules.Posts.Domain.Users;
@@ -10,6 +11,7 @@ namespace Modules.Posts.Application.Comments.Remove;
 internal sealed class RemoveCommentCommandHandler(
     IUsersApi usersApi, 
     ICommentRepository commentRepository,
+    IPublisher publisher,
     IUnitOfWork unitOfWork) : ICommandHandler<RemoveCommentCommand>
 {
     public async Task<Result> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,8 @@ internal sealed class RemoveCommentCommandHandler(
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new CommentRemovedEvent(comment.PostId), cancellationToken);
 
         return Result.Success();
     }

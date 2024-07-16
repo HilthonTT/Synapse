@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Comments;
 using Modules.Posts.Domain.Posts;
@@ -12,6 +13,7 @@ internal sealed class CreateCommentCommandHandler(
     IUsersApi usersApi, 
     ICommentRepository commentRepository,
     IPostRepository postRepository,
+    IPublisher publisher,
     IUnitOfWork unitOfWork) : ICommandHandler<CreateCommentCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
@@ -35,6 +37,8 @@ internal sealed class CreateCommentCommandHandler(
         commentRepository.Insert(comment);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new CommentCreatedEvent(comment.PostId), cancellationToken);
 
         return comment.Id;
     }

@@ -1,12 +1,15 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Users;
 using SharedKernel;
 
 namespace Modules.Users.Application.Users.Create;
 
-internal sealed class CreateUserCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork) 
-    : ICommandHandler<CreateUserCommand, Guid>
+internal sealed class CreateUserCommandHandler(
+    IUserRepository userRepository, 
+    IPublisher publisher,
+    IUnitOfWork unitOfWork) : ICommandHandler<CreateUserCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -54,6 +57,8 @@ internal sealed class CreateUserCommandHandler(IUserRepository userRepository, I
         userRepository.Insert(user);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new UserCreatedEvent(user.Id), cancellationToken);
 
         return user.Id;
     }

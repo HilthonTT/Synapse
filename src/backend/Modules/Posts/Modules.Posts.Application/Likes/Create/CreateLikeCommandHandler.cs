@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Posts.Application.Abstractions.Data;
 using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Posts;
@@ -12,6 +13,7 @@ internal sealed class CreateLikeCommandHandler(
     IUsersApi usersApi,
     ILikeRepository likeRepository, 
     IPostRepository postRepository, 
+    IPublisher publisher,
     IUnitOfWork unitOfWork) : ICommandHandler<CreateLikeCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateLikeCommand request, CancellationToken cancellationToken)
@@ -39,6 +41,8 @@ internal sealed class CreateLikeCommandHandler(
         likeRepository.Insert(like);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new LikeCreatedEvent(post.Id), cancellationToken);
 
         return like.Id;
     }

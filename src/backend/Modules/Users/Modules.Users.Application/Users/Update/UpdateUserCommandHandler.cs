@@ -1,12 +1,15 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Users;
 using SharedKernel;
 
 namespace Modules.Users.Application.Users.Update;
 
-internal sealed class UpdateUserCommandHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
-    : ICommandHandler<UpdateUserCommand, Guid>
+internal sealed class UpdateUserCommandHandler(
+    IUserRepository userRepository, 
+    IPublisher publisher,
+    IUnitOfWork unitOfWork) : ICommandHandler<UpdateUserCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
@@ -46,6 +49,8 @@ internal sealed class UpdateUserCommandHandler(IUserRepository userRepository, I
         user.Update(name, username, email, request.ImageUrl);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new UserUpdatedEvent(user.Id), cancellationToken);
 
         return user.Id;
     }
