@@ -36,3 +36,9 @@ declare type NewPost = {
   location?: string;
   tags?: string;
 };
+
+declare type CursorPaginationPost = {
+  posts: Post[];
+  nextCursor?: string;
+  previousCursor?: string;
+};

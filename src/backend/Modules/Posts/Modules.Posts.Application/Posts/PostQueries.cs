@@ -6,37 +6,40 @@ namespace Modules.Posts.Application.Posts;
 
 public static class PostQueries
 {
-    public static async Task<(List<PostResponse> Posts, Guid? NextCursor)> GetAsync(
+    public static async Task<(List<PostResponse> Posts, Guid? NextCursor, Guid? PreviousCursor)> GetAsync(
         IDbConnection connection, 
         Guid? cursor, 
         int limit)
     {
         const string sql =
             """
-            SELECT
-                p.id AS Id,
-                p.title AS Title,
-                p.image_url AS ImageUrl,
-                p.tags AS Tags,
-                u.id AS UserId,
-                u.name AS Name,
-                u.username AS Username,
-                u.image_url AS UserImageUrl,
-                (
-                    SELECT COUNT(*)
-                    FROM posts.likes l
-                    WHERE l.post_id = p.id
-                ) AS LikesCount,
-                (
-                    SELECT COUNT(*)
-                    FROM posts.comments c
-                    WHERE c.post_id = p.id
-                ) AS CommentsCount
-            FROM posts.posts p
-            LEFT JOIN users.users u ON u.id = p.user_id
-            WHERE (@Cursor IS NULL OR p.id < @Cursor)
-            ORDER BY p.id DESC
-            LIMIT @Limit;
+            WITH CTE AS (
+                SELECT
+                    p.id AS Id,
+                    p.title AS Title,
+                    p.image_url AS ImageUrl,
+                    p.tags AS Tags,
+                    u.id AS UserId,
+                    u.name AS Name,
+                    u.username AS Username,
+                    u.image_url AS UserImageUrl,
+                    (
+                        SELECT COUNT(*)
+                        FROM posts.likes l
+                        WHERE l.post_id = p.id
+                    ) AS LikesCount,
+                    (
+                        SELECT COUNT(*)
+                        FROM posts.comments c
+                        WHERE c.post_id = p.id
+                    ) AS CommentsCount,
+                    ROW_NUMBER() OVER (ORDER BY p.id DESC) AS RowNumber
+                FROM posts.posts p
+                LEFT JOIN users.users u ON u.id = p.user_id
+                WHERE (@Cursor IS NULL OR p.id < @Cursor)
+            )
+            SELECT * FROM CTE
+            WHERE RowNumber BETWEEN 1 AND @Limit + 1;
             """;
 
         IEnumerable<PostQueryResult> results = await connection.QueryAsync<PostQueryResult>(
@@ -47,27 +50,31 @@ public static class PostQueries
                 Limit = limit
             });
 
-        List<PostResponse> posts = results.Select(result =>
-        {
-            var userResponse = new UserResponse(
-                result.UserId,
-                result.UserName,
-                result.UserUsername,
-                result.UserImageUrl);
+        List<PostResponse> posts = results
+            .Take(limit)
+            .Select(result =>
+            {
+                var userResponse = new UserResponse(
+                    result.UserId,
+                    result.UserName,
+                    result.UserUsername,
+                    result.UserImageUrl);
 
-            return new PostResponse(
-                result.Id,
-                result.Title,
-                result.ImageUrl,
-                result.Tags,
-                userResponse,
-                result.LikesCount,
-                result.CommentsCount);
-        }).ToList();
+                return new PostResponse(
+                    result.Id,
+                    result.Title,
+                    result.ImageUrl,
+                    result.Tags,
+                    userResponse,
+                    result.LikesCount,
+                    result.CommentsCount);
+            })
+            .ToList();
 
-        Guid? nextCursor = posts.Count > 0 ? posts.Last().Id : null;
+        Guid? nextCursor = posts.Count == limit ? posts.Last().Id : null;
+        Guid? previousCursor = results.Any() ? results.First().Id : null;
 
-        return (posts, nextCursor);
+        return (posts, nextCursor, previousCursor);
     }
 
     public static async Task<PostResponse?> GetByIdAsync(

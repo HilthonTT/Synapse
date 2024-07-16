@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Modules.Posts.Application.Posts;
 using Modules.Posts.Application.Posts.Get;
 using Presentation.Extensions;
 using Presentation.Infrastructure;
@@ -16,10 +15,10 @@ internal sealed class Get : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("posts", async (
-            [FromQuery] Guid? cursor,
-            [FromQuery] int Limit,
             ISender sender,
-            CancellationToken cancellationToken) =>
+            CancellationToken cancellationToken,
+            [FromQuery] Guid? cursor,
+            [FromQuery] int Limit = 10) =>
         {
             var query = new GetPostsQuery(cursor, Limit);
 

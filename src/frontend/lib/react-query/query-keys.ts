@@ -1,3 +1,4 @@
 export enum QUERY_KEYS {
   GET_POSTS = "GET_POSTS",
+  INFINITE_POSTS = "INFINITE_POSTS",
 }

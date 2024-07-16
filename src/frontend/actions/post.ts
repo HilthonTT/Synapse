@@ -1,7 +1,8 @@
 "use server";
 
-import { createAxiosInstance } from "@/lib/axios.config";
+import qs from "query-string";
 
+import { createAxiosInstance } from "@/lib/axios.config";
 import { getUserFromAuth } from "@/actions/user";
 
 export const createPost = async ({
@@ -29,5 +30,33 @@ export const createPost = async ({
   } catch (error) {
     console.log("CREATE_POST", error);
     return null;
+  }
+};
+
+export const getPosts = async (cursor: string) => {
+  try {
+    const api = await createAxiosInstance();
+
+    const url = qs.stringifyUrl(
+      {
+        url: "/api/v1/posts",
+        query: {
+          cursor,
+        },
+      },
+      {
+        skipEmptyString: true,
+        skipNull: true,
+      }
+    );
+
+    const response = await api.get(url);
+
+    const paginatedPosts = response.data as CursorPaginationPost;
+
+    return paginatedPosts;
+  } catch (error) {
+    console.error("GET_POST", error);
+    throw new Error("Failed to fetch posts");
   }
 };
