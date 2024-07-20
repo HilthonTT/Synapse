@@ -1,15 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { IconDots, IconHeart, IconHeartFilled } from "@tabler/icons-react";
+import { IconDots } from "@tabler/icons-react";
 import { redirect, useRouter } from "next/navigation";
 
-import { getPostBydId, getPostComments } from "@/lib/react-query/queries";
+import { useGetPostBydId, useGetPostComments } from "@/lib/react-query/queries";
 import { DirectionAwareHover } from "@/components/ui/direction-aware-hover";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { EmojiPicker } from "@/components/emoji-picker";
+import { Loader } from "@/components/loader";
+
+import { CommentInput } from "./_components/comment-input";
 
 type Props = {
   params: {
@@ -19,13 +20,17 @@ type Props = {
 
 const PostIdPage = ({ params: { postId } }: Props) => {
   const router = useRouter();
-  const { data: post, isLoading: postLoading } = getPostBydId(postId);
-  const { data: comments, isLoading: commentLoading } = getPostComments(postId);
 
-  const isLiked = false;
+  const { data: post, isLoading: postLoading } = useGetPostBydId(postId);
+  const { data: comments, isLoading: commentLoading } =
+    useGetPostComments(postId);
 
   if (postLoading || commentLoading) {
-    return <p>Loading....</p>;
+    return (
+      <div className="size-full flex-center">
+        <Loader />
+      </div>
+    );
   }
 
   if (!post) {
@@ -35,8 +40,6 @@ const PostIdPage = ({ params: { postId } }: Props) => {
   const loadCreatorPage = () => {
     router.push(`/user/${post.creator.userId}`);
   };
-
-  const toggleLike = () => {};
 
   return (
     <div className="flex-center w-full mx-4">
@@ -79,24 +82,7 @@ const PostIdPage = ({ params: { postId } }: Props) => {
             ))}
           </ScrollArea>
 
-          <div className="mt-20">
-            <div className="relative">
-              <Button
-                onClick={toggleLike}
-                variant="ghost"
-                className="hover:opacity-75 absolute top-1 left-0">
-                {isLiked ? (
-                  <IconHeartFilled className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
-                ) : (
-                  <IconHeart className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
-                )}
-              </Button>
-              <Input placeholder="Add a comment..." className="px-14" />
-              <div className="absolute top-3 right-3">
-                <EmojiPicker onChange={() => {}} />
-              </div>
-            </div>
-          </div>
+          <CommentInput postId={postId} />
         </div>
       </div>
     </div>

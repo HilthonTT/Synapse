@@ -26,6 +26,7 @@ internal sealed class AddLike : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+         .RequireAuthorization()
          .WithTags(Tags.Posts);
     }
 }

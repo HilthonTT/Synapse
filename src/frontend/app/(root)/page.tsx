@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { getInfinitePosts } from "@/lib/react-query/queries";
+import { useGetInfinitePosts } from "@/lib/react-query/queries";
 import { LayoutGrid } from "@/components/ui/layout-grid";
 import { SearchInput } from "@/components/search-input";
 import { Loader } from "@/components/loader";
@@ -11,7 +11,7 @@ import { Loader } from "@/components/loader";
 const HomePage = () => {
   const { ref, inView } = useInView();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    getInfinitePosts();
+    useGetInfinitePosts();
 
   useEffect(() => {
     if (inView && hasNextPage) {

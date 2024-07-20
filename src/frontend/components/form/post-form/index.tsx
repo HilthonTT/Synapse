@@ -56,7 +56,7 @@ export const PostForm = ({ step, setStep }: Props) => {
       });
     }
 
-    router.push(postId);
+    router.push(`/posts/${postId}`);
   };
 
   return (

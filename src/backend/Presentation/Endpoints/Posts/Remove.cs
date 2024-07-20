@@ -26,6 +26,7 @@ internal sealed class Remove : IEndpoint
 
             result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .RequireAuthorization()
         .WithTags(Tags.Posts);
     }
 }

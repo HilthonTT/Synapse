@@ -32,6 +32,7 @@ internal sealed class Update : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .RequireAuthorization()
         .WithTags(Tags.Posts);
     }
 }

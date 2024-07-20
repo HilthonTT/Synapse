@@ -1,13 +1,16 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-import { getPostById, getPosts } from "@/actions/post";
 import { QUERY_KEYS } from "@/lib/react-query/query-keys";
+import { getPostById, getPosts } from "@/actions/post";
 import { getCommentsByPostId } from "@/actions/comments";
+import { getLikesByPostId } from "@/actions/likes";
+import { getUserFromAuth } from "@/actions/user";
 
-export const getInfinitePosts = () => {
+export const useGetInfinitePosts = () => {
   const query = useInfiniteQuery<CursorPaginationPost, Error>({
     queryKey: [QUERY_KEYS.INFINITE_POSTS],
-    queryFn: ({ pageParam = null }) => getPosts(pageParam as string),
+    queryFn: async ({ pageParam = null }) =>
+      await getPosts(pageParam as string),
     getNextPageParam: (lastPage: CursorPaginationPost) =>
       lastPage.nextCursor ?? null,
     getPreviousPageParam: (firstPage: CursorPaginationPost) =>
@@ -18,21 +21,40 @@ export const getInfinitePosts = () => {
   return query;
 };
 
-export const getPostBydId = (postId: string) => {
+export const useGetPostBydId = (postId: string) => {
   const query = useQuery({
     enabled: !!postId,
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, { postId }],
-    queryFn: () => getPostById(postId),
+    queryFn: async () => await getPostById(postId),
   });
 
   return query;
 };
 
-export const getPostComments = (postId: string) => {
+export const useGetPostComments = (postId: string) => {
   const query = useQuery({
     enabled: !!postId,
     queryKey: [QUERY_KEYS.GET_POST_COMMENTS, { postId }],
-    queryFn: () => getCommentsByPostId(postId),
+    queryFn: async () => await getCommentsByPostId(postId),
+  });
+
+  return query;
+};
+
+export const useGetPostLikes = (postId: string) => {
+  const query = useQuery({
+    enabled: !!postId,
+    queryKey: [QUERY_KEYS.GET_POST_LIKES, { postId }],
+    queryFn: async () => await getLikesByPostId(postId),
+  });
+
+  return query;
+};
+
+export const useGetUserFromAuth = () => {
+  const query = useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_FROM_AUTH],
+    queryFn: async () => getUserFromAuth(),
   });
 
   return query;

@@ -25,6 +25,7 @@ internal sealed class StartFollowing : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .RequireAuthorization()
         .WithTags(Tags.Users);
     }
 }

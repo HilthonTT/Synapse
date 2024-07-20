@@ -60,3 +60,8 @@ declare type PostComment = {
   createdOnUtc: Date;
   modifiedOnUtc?: Date;
 };
+
+declare type Like = {
+  postId: string;
+  userId: string;
+};

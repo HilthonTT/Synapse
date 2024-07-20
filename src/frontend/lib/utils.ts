@@ -29,3 +29,13 @@ export const getBase64 = (file: File): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+
+export const hasLiked = (userId: string | undefined, likes: Like[]) => {
+  if (!userId) {
+    return false;
+  }
+
+  const like = likes.find((like) => like.userId === userId);
+
+  return !!like;
+};
