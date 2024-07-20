@@ -6,10 +6,11 @@ import { useInView } from "react-intersection-observer";
 import { getInfinitePosts } from "@/lib/react-query/queries";
 import { LayoutGrid } from "@/components/ui/layout-grid";
 import { SearchInput } from "@/components/search-input";
+import { Loader } from "@/components/loader";
 
 const HomePage = () => {
   const { ref, inView } = useInView();
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     getInfinitePosts();
 
   useEffect(() => {
@@ -23,6 +24,8 @@ const HomePage = () => {
       page.posts.map((post, index) => ({
         id: post.id,
         content: post.title,
+        creatorName: post.creator.username,
+        creatorImageUrl: post.creator.imageUrl,
         className:
           index === 0 || (index + 1) % 4 === 0 ? "md:col-span-2" : "col-span-1",
         thumbnail: post.imageUrl,
@@ -38,7 +41,11 @@ const HomePage = () => {
         ref={ref}
         style={{ height: "1px", backgroundColor: "transparent" }}
       />
-      {isFetchingNextPage && <p>Loading more...</p>}
+      {(isFetchingNextPage || isLoading) && (
+        <div className="flex-center my-8">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

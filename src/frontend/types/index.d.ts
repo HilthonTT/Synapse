@@ -48,4 +48,6 @@ declare type Card = {
   content: string;
   className: string;
   thumbnail: string;
+  creatorName: string;
+  creatorImageUrl: string;
 };

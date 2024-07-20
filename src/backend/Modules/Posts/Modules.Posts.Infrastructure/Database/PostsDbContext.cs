@@ -20,6 +20,7 @@ public sealed class PostsDbContext(DbContextOptions<PostsDbContext> options)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PostsDbContext).Assembly);
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new IdempotentRequestConfiguration());
 
         modelBuilder.HasDefaultSchema(Schemas.Posts);
     }

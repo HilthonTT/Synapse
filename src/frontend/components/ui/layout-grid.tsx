@@ -116,9 +116,19 @@ const SelectedCard = ({ selected }: { selected: Card | null }) => {
         }}
         className="relative px-8 pb-4 z-[70]">
         <div className="flex-between">
-          <p className="font-bold tracking-widest line-clamp-1">
-            {selected?.content}
-          </p>
+          <div className="flex items-center gap-2">
+            {selected && (
+              <Image
+                src={selected?.creatorImageUrl}
+                alt={selected?.creatorName || "creator"}
+                width={32}
+                height={32}
+              />
+            )}
+            <p className="font-bold tracking-widest line-clamp-1">
+              {selected?.content}
+            </p>
+          </div>
           <Button
             onClick={onClick}
             variant="outline"

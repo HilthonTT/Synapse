@@ -19,6 +19,7 @@ public static class PostQueries
                     p.title AS Title,
                     p.image_url AS ImageUrl,
                     p.tags AS Tags,
+                    p.created_at AS CreatedAt,
                     u.id AS UserId,
                     u.name AS Name,
                     u.username AS Username,
@@ -33,10 +34,10 @@ public static class PostQueries
                         FROM posts.comments c
                         WHERE c.post_id = p.id
                     ) AS CommentsCount,
-                    ROW_NUMBER() OVER (ORDER BY p.id DESC) AS RowNumber
+                    ROW_NUMBER() OVER (ORDER BY p.created_at DESC) AS RowNumber
                 FROM posts.posts p
                 LEFT JOIN users.users u ON u.id = p.user_id
-                WHERE (@Cursor IS NULL OR p.id < @Cursor)
+                WHERE (@Cursor IS NULL OR p.created_at < (SELECT created_at FROM posts.posts WHERE id = @Cursor))
             )
             SELECT * FROM CTE
             WHERE RowNumber BETWEEN 1 AND @Limit + 1;

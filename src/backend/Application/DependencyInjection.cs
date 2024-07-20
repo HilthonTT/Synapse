@@ -15,6 +15,7 @@ public static class DependencyInjection
 
             config.AddOpenBehavior(typeof(ExceptionHandlingPipelineBehavior<,>));
             config.AddOpenBehavior(typeof(RequestLoggingPipelineBehavior<,>));
+            config.AddOpenBehavior(typeof(IdempotentCommandPipelineBehavior<,>));
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
             config.AddOpenBehavior(typeof(QueryCachingPipelineBehavior<,>));
         });

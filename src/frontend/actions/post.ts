@@ -1,6 +1,7 @@
 "use server";
 
 import qs from "query-string";
+import { v4 as uuid } from "uuid";
 
 import { createAxiosInstance } from "@/lib/axios.config";
 import { getUserFromAuth } from "@/actions/user";
@@ -16,13 +17,23 @@ export const createPost = async ({
 
     const api = await createAxiosInstance();
 
-    const response = await api.post("/api/v1/posts", {
-      userId: currentUser.id,
-      title,
-      imageUrl,
-      location,
-      tags,
-    });
+    const idempotencyKey = uuid();
+
+    const response = await api.post(
+      "/api/v1/posts",
+      {
+        userId: currentUser.id,
+        title,
+        imageUrl,
+        location,
+        tags,
+      },
+      {
+        headers: {
+          "X-Idempotency-Key": idempotencyKey,
+        },
+      }
+    );
 
     const postId = response.data as string;
 

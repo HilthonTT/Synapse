@@ -1,4 +1,5 @@
-﻿using Infrastructure.Constants;
+﻿using Application.Abstractions.Idempotency;
+using Infrastructure.Constants;
 using Infrastructure.Database.Interceptors;
 using Infrastructure.Extensions;
 using Infrastructure.Outbox;
@@ -12,6 +13,7 @@ using Modules.Posts.Domain.Comments;
 using Modules.Posts.Domain.Likes;
 using Modules.Posts.Domain.Posts;
 using Modules.Posts.Infrastructure.Database;
+using Modules.Posts.Infrastructure.Idempotency;
 using Modules.Posts.Infrastructure.Outbox;
 using Modules.Posts.Infrastructure.Repositories;
 
@@ -47,6 +49,8 @@ public static class DependencyInjection
         services.AddScoped<IPostRepository, PostRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<ILikeRepository, LikeRepository>();
+
+        services.AddScoped<IIdempotencyService, IdempotencyService>();
 
         services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
 
