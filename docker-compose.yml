@@ -1,14 +1,35 @@
 version: '3.4'
 
 services:
-  web.api:
+  synapse.api:
     image: ${DOCKER_REGISTRY-}webapi
+    container_name: synapse-api
     build:
       context: .
       dockerfile: src/backend/Web.Api/Dockerfile
     ports:
     - 5000:5000
     - 5001:5001
+ 
+  synapse.api1:
+    image: ${DOCKER_REGISTRY-}webapi
+    container_name: synapse-api1
+    build:
+      context: .
+      dockerfile: src/backend/Web.Api/Dockerfile
+    ports:
+    - 6000:6000
+    - 6001:6001
+
+  synapse.api2:
+    image: ${DOCKER_REGISTRY-}webapi
+    container_name: synapse-api2
+    build:
+      context: .
+      dockerfile: src/backend/Web.Api/Dockerfile
+    ports:
+    - 7000:7000
+    - 7001:7001
 
   synapse-database:
     image: postgres:latest
