@@ -51,3 +51,12 @@ declare type Card = {
   creatorName: string;
   creatorImageUrl: string;
 };
+
+declare type PostComment = {
+  id: string;
+  postId: string;
+  content: string;
+  user: User;
+  createdOnUtc: Date;
+  modifiedOnUtc?: Date;
+};

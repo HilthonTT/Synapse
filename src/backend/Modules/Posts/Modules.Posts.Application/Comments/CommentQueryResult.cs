@@ -8,6 +8,8 @@ internal sealed class CommentQueryResult
 
     public Guid UserId { get; set; }
 
+    public string Content { get; set; } = string.Empty;
+
     public string Name { get; set; } = string.Empty;
 
     public string Username { get; set; } = string.Empty;

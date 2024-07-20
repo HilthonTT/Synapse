@@ -1,7 +1,8 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-import { getPosts } from "@/actions/post";
+import { getPostById, getPosts } from "@/actions/post";
 import { QUERY_KEYS } from "@/lib/react-query/query-keys";
+import { getCommentsByPostId } from "@/actions/comments";
 
 export const getInfinitePosts = () => {
   const query = useInfiniteQuery<CursorPaginationPost, Error>({
@@ -12,6 +13,26 @@ export const getInfinitePosts = () => {
     getPreviousPageParam: (firstPage: CursorPaginationPost) =>
       firstPage.previousCursor ?? null,
     initialPageParam: null,
+  });
+
+  return query;
+};
+
+export const getPostBydId = (postId: string) => {
+  const query = useQuery({
+    enabled: !!postId,
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, { postId }],
+    queryFn: () => getPostById(postId),
+  });
+
+  return query;
+};
+
+export const getPostComments = (postId: string) => {
+  const query = useQuery({
+    enabled: !!postId,
+    queryKey: [QUERY_KEYS.GET_POST_COMMENTS, { postId }],
+    queryFn: () => getCommentsByPostId(postId),
   });
 
   return query;

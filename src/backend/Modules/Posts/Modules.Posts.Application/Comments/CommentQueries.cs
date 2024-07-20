@@ -16,6 +16,7 @@ public static class CommentQueries
             SELECT
                 c.id AS Id,
                 c.post_id AS PostId,
+                c.content AS Content,
                 u.id AS UserId,
                 u.name AS Name,
                 u.username AS Username,
@@ -43,6 +44,7 @@ public static class CommentQueries
             return new CommentResponse(
                 result.Id,
                 result.PostId,
+                result.Content,
                 userResponse,
                 result.CreatedOnUtc,
                 result.ModifiedOnUtc

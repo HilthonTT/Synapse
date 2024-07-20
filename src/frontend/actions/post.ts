@@ -71,3 +71,18 @@ export const getPosts = async (cursor: string) => {
     throw new Error("Failed to fetch posts");
   }
 };
+
+export const getPostById = async (postId: string) => {
+  try {
+    const api = await createAxiosInstance();
+
+    const response = await api.get(`/api/v1/posts/${postId}`);
+
+    const post = response.data as Post;
+
+    return post;
+  } catch (error) {
+    console.error("GET_POST_BY_ID", error);
+    throw new Error(`Failed to fetch post with id '${postId}'`);
+  }
+};
