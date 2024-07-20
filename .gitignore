@@ -399,3 +399,4 @@ FodyWeavers.xsd
 /.containers/db
 /.containers/blob_storage/data
 /src/backend/Web.Api/Sentry/3362D20DC6A7E645E67226F912099E862748528D
+/src/backend/Web.Api/Sentry/6FA5E8F3F279E598C2E37EEBE3D884AD28571F88

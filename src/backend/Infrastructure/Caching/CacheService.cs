@@ -1,12 +1,15 @@
 ﻿using Application.Abstractions.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Text.Json;
 
 namespace Infrastructure.Caching;
 
 internal sealed class CacheService(IDistributedCache cache) : ICacheService
 {
+    private static readonly ConcurrentDictionary<string, bool> KeyIndex = [];
+
     public async Task<T?> GetAsync<T>(
         string key, 
         CancellationToken cancellationToken = default)
@@ -16,18 +19,41 @@ internal sealed class CacheService(IDistributedCache cache) : ICacheService
         return bytes is null ? default : Deserialize<T>(bytes);
     }
 
-    public Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(
+        string key, 
+        T value, 
+        TimeSpan? expiration = null,
+        CancellationToken cancellationToken = default)
     {
         byte[] bytes = Serialize(value);
 
         DistributedCacheEntryOptions options = CacheOptions.Create(expiration);
 
-        return cache.SetAsync(key, bytes, options, cancellationToken);
+        await cache.SetAsync(key, bytes, options, cancellationToken);
+
+        KeyIndex.TryAdd(key, true);
     }
 
-    public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
-        return cache.RemoveAsync(key, cancellationToken);
+        await cache.RemoveAsync(key, cancellationToken);
+
+        KeyIndex.TryRemove(key, out _);
+    }
+
+    public async Task RemoveKeysWithPrefixAsync(string prefix, CancellationToken cancellationToken = default)
+    {
+        List<string> keysToRemove = KeyIndex.Keys.Where(key => key.StartsWith(prefix)).ToList();
+
+        var tasks = new List<Task>();
+
+        foreach (var key in keysToRemove)
+        {
+            tasks.Add(cache.RemoveAsync(key, cancellationToken));
+            KeyIndex.TryRemove(key, out _);
+        }
+
+        await Task.WhenAll(tasks);
     }
 
     private static T Deserialize<T>(byte[] bytes)
