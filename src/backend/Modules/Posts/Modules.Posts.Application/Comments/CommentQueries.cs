@@ -25,7 +25,8 @@ public static class CommentQueries
                 c.modified_on_utc AS ModifiedOnUtc
             FROM posts.comments c
             LEFT JOIN users.users u ON u.id = c.user_id
-            WHERE c.post_id = @PostId;
+            WHERE c.post_id = @PostId
+            ORDER BY c.created_on_utc ASC;
             """;
 
         IEnumerable<CommentQueryResult> results = await connection.QueryAsync<CommentQueryResult>(

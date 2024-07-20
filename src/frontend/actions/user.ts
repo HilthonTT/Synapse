@@ -7,5 +7,11 @@ export const getUserFromAuth = async () => {
 
   const response = await api.get("/api/v1/users/auth");
 
-  return response.data as UserFromAuth;
+  const user = response.data as UserFromAuth;
+
+  if (!user) {
+    return null;
+  }
+
+  return user;
 };

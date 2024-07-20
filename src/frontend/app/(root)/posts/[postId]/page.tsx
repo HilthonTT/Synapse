@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "@/components/loader";
 
 import { CommentInput } from "./_components/comment-input";
+import { CommentCard } from "./_components/comment-card";
 
 type Props = {
   params: {
@@ -78,7 +79,7 @@ const PostIdPage = ({ params: { postId } }: Props) => {
 
           <ScrollArea className="h-60 2xl:h-[500px]">
             {comments?.map((comment) => (
-              <p key={comment.id}>{comment.content}</p>
+              <CommentCard key={comment.id} comment={comment} />
             ))}
           </ScrollArea>
 

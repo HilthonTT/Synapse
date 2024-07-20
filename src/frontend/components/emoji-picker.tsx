@@ -10,17 +10,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 type Props = {
   onChange: (value: string) => void;
+  disabled?: boolean;
 };
 
-export const EmojiPicker = ({ onChange }: Props) => {
+export const EmojiPicker = ({ onChange, disabled }: Props) => {
   const { resolvedTheme } = useTheme();
 
   return (
     <Popover>
-      <PopoverTrigger>
+      <PopoverTrigger disabled={disabled} className={cn(disabled && "hidden")}>
         <IconMoodSmileDizzy className="text-zinc-400 hover:text-zinc-300 transition" />
       </PopoverTrigger>
       <PopoverContent
