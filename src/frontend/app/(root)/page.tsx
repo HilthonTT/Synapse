@@ -29,6 +29,8 @@ const HomePage = () => {
         className:
           index === 0 || (index + 1) % 4 === 0 ? "md:col-span-2" : "col-span-1",
         thumbnail: post.imageUrl,
+        likesCount: post.likesCount,
+        commentsCount: post.commentsCount,
       }))
     ) || [];
 

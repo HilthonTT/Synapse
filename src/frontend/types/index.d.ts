@@ -50,6 +50,8 @@ declare type Card = {
   thumbnail: string;
   creatorName: string;
   creatorImageUrl: string;
+  likesCount: number;
+  commentsCount: number;
 };
 
 declare type PostComment = {

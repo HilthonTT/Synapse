@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { IconHeartFilled, IconMessageDots } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -101,6 +102,18 @@ const SelectedCard = ({ selected }: { selected: Card | null }) => {
         }}
         className="absolute inset-0 h-full w-full bg-black/40 opacity-60 z-10"
       />
+
+      <div className="absolute top-2 left-2 p-2 gap-6 flex items-center">
+        <div className="flex items-center gap-1">
+          <IconHeartFilled className="text-red-500" />
+          <p className="text-white font-bold">{selected?.likesCount}</p>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <IconMessageDots />
+          <p className="text-white font-bold">{selected?.commentsCount}</p>
+        </div>
+      </div>
       <motion.div
         initial={{
           opacity: 0,
