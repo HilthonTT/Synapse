@@ -58,6 +58,19 @@ public sealed class User : Entity, IAuditableEntity
         return user;
     }
 
+    public static User CreateTest()
+    {
+        var user = new User(
+            Guid.NewGuid(),
+            ObjectIdentifier.Create("test-oid").Value,
+            Name.Create("Name").Value,
+            Username.Create("UserName").Value,
+            Email.Create("test@test.com").Value,
+            "image-url");
+
+        return user;
+    }
+
     public void Update(Name name, Username username, Email email, string imageUrl)
     {
         Name = name;

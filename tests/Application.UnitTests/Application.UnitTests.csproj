@@ -32,8 +32,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Followers\" />
-  </ItemGroup>
-
 </Project>

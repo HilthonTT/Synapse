@@ -125,4 +125,21 @@ public sealed class CreateUserCommandTests
         // Assert
         await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task Handle_Should_CallPublisher_WhenCreatedSucceeds()
+    {
+        // Arrange
+        _userRepositoryMock.IsEmailUniqueAsync(Arg.Is<Email>(e => e.Value == Command.Email))
+            .Returns(true);
+
+        _userRepositoryMock.IsOidUniqueAsync(Arg.Is<ObjectIdentifier>(e => e.Value == Command.ObjectIdentifier))
+            .Returns(true);
+
+        // Act
+        Result<Guid> result = await _handler.Handle(Command, default);
+
+        // Assert
+        await _publisherMock.Received(1).Publish(new UserCreatedEvent(result.Value), Arg.Any<CancellationToken>());
+    }
 }
