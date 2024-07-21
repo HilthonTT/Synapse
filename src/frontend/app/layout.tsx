@@ -7,6 +7,7 @@ import { dark } from "@clerk/themes";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { ToastProvider } from "@/providers/toast-provider";
 
 const font = Open_Sans({
   subsets: ["latin"],
@@ -35,7 +36,10 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="dark"
             disableTransitionOnChange>
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <ToastProvider />
+              {children}
+            </QueryProvider>
           </ThemeProvider>
         </body>
       </html>

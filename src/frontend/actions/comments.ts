@@ -1,7 +1,9 @@
 "use server";
 
+import qs from "query-string";
+
 import { createAxiosInstance } from "@/lib/axios.config";
-import { getUserFromAuth } from "./user";
+import { getUserFromAuth } from "@/actions/user";
 
 export const getCommentsByPostId = async (postId: string) => {
   try {
@@ -39,5 +41,47 @@ export const createComment = async (postId: string, content: string) => {
   } catch (error) {
     console.error("CREATE_COMMENT", error);
     throw new Error("Failed to create comment");
+  }
+};
+
+export const updateComment = async (commentId: string, content: string) => {
+  try {
+    const user = await getUserFromAuth();
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    const api = await createAxiosInstance();
+
+    await api.patch(`/api/v1/comments/${commentId}`, {
+      userId: user.id,
+      content,
+    });
+  } catch (error) {
+    console.error("UPDATE_COMMENT", error);
+    throw new Error("Failed to update comment");
+  }
+};
+
+export const deleteComment = async (commentId: string) => {
+  try {
+    const user = await getUserFromAuth();
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    const api = await createAxiosInstance();
+
+    const url = qs.stringifyUrl({
+      url: `/api/v1/comments/${commentId}`,
+      query: {
+        userId: user.id,
+      },
+    });
+
+    await api.delete(url);
+  } catch (error) {
+    console.error("DELETE_COMMENT", error);
+    throw new Error("Failed to delete comment");
   }
 };

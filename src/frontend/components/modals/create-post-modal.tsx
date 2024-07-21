@@ -29,7 +29,7 @@ export const CreatePostModal = () => {
           </div>
         </li>
       </ModalTrigger>
-      <ModalBody className="">
+      <ModalBody>
         <ModalContent>
           <PostForm step={step} setStep={setStep} />
         </ModalContent>

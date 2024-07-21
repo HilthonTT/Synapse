@@ -33,6 +33,8 @@ internal sealed class RemoveCommentCommandHandler(
             return Result.Failure(UserErrors.Unauthorized);
         }
 
+        commentRepository.Remove(comment);
+
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         await publisher.Publish(new CommentRemovedEvent(comment.PostId), cancellationToken);

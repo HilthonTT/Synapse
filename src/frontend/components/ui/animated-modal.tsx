@@ -19,8 +19,18 @@ interface ModalContextType {
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
-export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [open, setOpen] = useState(false);
+export const ModalProvider = ({
+  children,
+  isOpen,
+}: {
+  children: ReactNode;
+  isOpen?: boolean;
+}) => {
+  const [open, setOpen] = useState(isOpen || false);
+
+  useEffect(() => {
+    setOpen(isOpen || false);
+  }, [isOpen]);
 
   return (
     <ModalContext.Provider value={{ open, setOpen }}>
@@ -31,14 +41,22 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
 export const useModal = () => {
   const context = useContext(ModalContext);
+
   if (!context) {
     throw new Error("useModal must be used within a ModalProvider");
   }
+
   return context;
 };
 
-export function Modal({ children }: { children: ReactNode }) {
-  return <ModalProvider>{children}</ModalProvider>;
+export function Modal({
+  children,
+  isOpen,
+}: {
+  children: ReactNode;
+  isOpen?: boolean;
+}) {
+  return <ModalProvider isOpen={isOpen}>{children}</ModalProvider>;
 }
 
 export const ModalTrigger = ({
@@ -49,6 +67,7 @@ export const ModalTrigger = ({
   className?: string;
 }) => {
   const { setOpen } = useModal();
+
   return (
     <button
       className={cn(
@@ -68,7 +87,7 @@ export const ModalBody = ({
   children: ReactNode;
   className?: string;
 }) => {
-  const { open } = useModal();
+  const { open, setOpen } = useModal();
 
   useEffect(() => {
     if (open) {
@@ -79,7 +98,7 @@ export const ModalBody = ({
   }, [open]);
 
   const modalRef = useRef(null);
-  const { setOpen } = useModal();
+
   useOutsideClick(modalRef, () => setOpen(false));
 
   return (
@@ -97,7 +116,7 @@ export const ModalBody = ({
             opacity: 0,
             backdropFilter: "blur(0px)",
           }}
-          className="fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50">
+          className="fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full flex items-center justify-center z-50">
           <Overlay />
 
           <motion.div

@@ -1,9 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { createPost } from "@/actions/post";
-import { QUERY_KEYS } from "@/lib/react-query/query-keys";
 import { likePost, unlikePost } from "@/actions/likes";
-import { createComment } from "@/actions/comments";
+import { QUERY_KEYS } from "@/lib/react-query/query-keys";
+import {
+  createComment,
+  deleteComment,
+  updateComment,
+} from "@/actions/comments";
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
@@ -27,7 +31,7 @@ export const useLikePost = (postId: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async () => likePost(postId),
+    mutationFn: async () => await likePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_LIKES, { postId }],
@@ -42,7 +46,7 @@ export const useUnlikePost = (postId: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async () => unlikePost(postId),
+    mutationFn: async () => await unlikePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_LIKES, { postId }],
@@ -57,7 +61,43 @@ export const useCreateComment = (postId: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (content: string) => createComment(postId, content),
+    mutationFn: async (content: string) => await createComment(postId, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_COMMENTS, { postId }],
+      });
+    },
+  });
+
+  return mutation;
+};
+
+export const useUpdateComment = (postId: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      commentId,
+      content,
+    }: {
+      commentId: string;
+      content: string;
+    }) => await updateComment(commentId, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_COMMENTS, { postId }],
+      });
+    },
+  });
+
+  return mutation;
+};
+
+export const useDeleteComment = (postId: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (commentId: string) => await deleteComment(commentId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_COMMENTS, { postId }],
