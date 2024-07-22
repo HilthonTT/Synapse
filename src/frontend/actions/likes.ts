@@ -7,11 +7,15 @@ import { getUserFromAuth } from "@/actions/user";
 
 export const likePost = async (postId: string) => {
   try {
-    const user = await getUserFromAuth();
+    const currentUser = await getUserFromAuth();
+    if (!currentUser) {
+      throw new Error("Unauthorized");
+    }
+
     const api = await createAxiosInstance();
 
     const response = await api.post(`/api/v1/posts/${postId}/likes`, {
-      userId: user.id,
+      userId: currentUser.id,
     });
 
     const likeId = response.data as string;
@@ -25,13 +29,17 @@ export const likePost = async (postId: string) => {
 
 export const unlikePost = async (postId: string) => {
   try {
-    const user = await getUserFromAuth();
+    const currentUser = await getUserFromAuth();
+    if (!currentUser) {
+      throw new Error("Unauthorized");
+    }
+
     const api = await createAxiosInstance();
 
     const url = qs.stringifyUrl({
       url: `/api/v1/posts/${postId}/likes`,
       query: {
-        userId: user.id,
+        userId: currentUser.id,
       },
     });
 

@@ -10,10 +10,11 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   form: any;
+  disabled: boolean;
   className?: string;
 };
 
-export const InfoStep = ({ form, className }: Props) => {
+export const InfoStep = ({ form, className, disabled }: Props) => {
   return (
     <div className={cn("space-y-4", className)}>
       <FormField
@@ -24,7 +25,11 @@ export const InfoStep = ({ form, className }: Props) => {
             <FormLabel>Make up a title</FormLabel>
 
             <FormControl>
-              <Input {...field} placeholder="My best holiday!" />
+              <Input
+                {...field}
+                placeholder="My best holiday!"
+                disabled={disabled}
+              />
             </FormControl>
 
             <FormMessage />

@@ -23,7 +23,7 @@ export const ImageStep = ({ form, className }: Props) => {
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <ImageUploader fieldChange={field.onChange} />
+              <ImageUploader value={field.value} fieldChange={field.onChange} />
             </FormControl>
 
             <FormMessage />

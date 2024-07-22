@@ -5,10 +5,15 @@ import {
   IconDots,
   IconHeartFilled,
   IconMessageDots,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Loader } from "@/components/loader";
+import { useGetUserFromAuth } from "@/lib/react-query/queries";
+import { FormPostModal } from "@/components/modals/form-post-modal";
+import { DeletePostModal } from "@/components/modals/delete-post-modal";
 
 type Props = {
   post: Post;
@@ -17,9 +22,13 @@ type Props = {
 export const Header = ({ post }: Props) => {
   const router = useRouter();
 
+  const { data: user, isLoading } = useGetUserFromAuth();
+
   const loadCreatorPage = () => {
     router.push(`/user/${post.creator.userId}`);
   };
+
+  const isOwner = user?.id === post.creator.userId;
 
   return (
     <div className="flex items-center gap-4">
@@ -51,12 +60,27 @@ export const Header = ({ post }: Props) => {
         <IconMessageDots size={18} />
         <p className="text-sm font-semibold">{post.commentsCount}</p>
       </div>
-      <div className="ml-auto">
-        <Button variant="ghost" className="hover:opacity-75">
-          <IconDots size={24} />
-          <p className="sr-only">options</p>
-        </Button>
-      </div>
+      {isOwner && (
+        <div className="ml-auto flex items-center">
+          <FormPostModal post={post}>
+            <Button variant="ghost" className="hover:opacity-75 P-1">
+              <IconDots size={20} />
+              <p className="sr-only">options</p>
+            </Button>
+          </FormPostModal>
+          <DeletePostModal postId={post.id}>
+            <Button variant="ghost" className="hover:opacity-75">
+              <IconTrash size={20} />
+              <p className="sr-only">delete</p>
+            </Button>
+          </DeletePostModal>
+        </div>
+      )}
+      {isLoading && (
+        <div className="ml-auto mr-3.5">
+          <Loader size={20} />
+        </div>
+      )}
     </div>
   );
 };

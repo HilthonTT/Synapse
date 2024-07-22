@@ -14,6 +14,9 @@ export const createPost = async ({
 }: NewPost) => {
   try {
     const currentUser = await getUserFromAuth();
+    if (!currentUser) {
+      throw new Error("Unauthorized");
+    }
 
     const api = await createAxiosInstance();
 
@@ -84,5 +87,56 @@ export const getPostById = async (postId: string) => {
   } catch (error) {
     console.error("GET_POST_BY_ID", error);
     throw new Error(`Failed to fetch post with id '${postId}'`);
+  }
+};
+
+export const updatePost = async (
+  postId: string,
+  title: string,
+  imageUrl: string,
+  tags?: string,
+  location?: string
+) => {
+  try {
+    const currentUser = await getUserFromAuth();
+    if (!currentUser) {
+      throw new Error("Unauthorized");
+    }
+
+    const api = await createAxiosInstance();
+
+    await api.patch(`/api/v1/posts/${postId}`, {
+      userId: currentUser.id,
+      title,
+      imageUrl,
+      location,
+      tags,
+    });
+  } catch (error) {
+    console.error("UPDATE_POST", error);
+    throw new Error("Failed to update post");
+  }
+};
+
+export const deletePost = async (postId: string) => {
+  try {
+    const currentUser = await getUserFromAuth();
+    if (!currentUser) {
+      throw new Error("Unauthorized");
+    }
+
+    const api = await createAxiosInstance();
+
+    const url = qs.stringifyUrl({
+      url: `/api/v1/posts/${postId}`,
+      query: {
+        userId: currentUser.id,
+      },
+    });
+
+    await api.delete(url);
+  } catch (error) {
+    console.error("UPDATE_POST", error);
+    throw new Error("Failed to delete post");
   }
 };

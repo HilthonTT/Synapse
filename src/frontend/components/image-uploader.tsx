@@ -10,10 +10,16 @@ import { cn, getBase64 } from "@/lib/utils";
 type Props = {
   fieldChange: (fileUrl: string) => void;
   imageUrl?: string;
+  value?: string;
   className?: string;
 };
 
-export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
+export const ImageUploader = ({
+  fieldChange,
+  imageUrl,
+  className,
+  value,
+}: Props) => {
   const [pending, startTransition] = useTransition();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -58,20 +64,33 @@ export const ImageUploader = ({ fieldChange, imageUrl, className }: Props) => {
         className
       )}>
       <input ref={inputRef} className="hidden" {...getInputProps()} />
-      {fileUrl ? (
-        <>
-          <div className="flex flex-1 justify-start items-center p-5">
-            <Image
-              src={fileUrl}
-              alt="image"
-              className="object-cover rounded-xl"
-              width={200}
-              height={200}
-              unoptimized
-            />
-          </div>
-        </>
-      ) : (
+      {fileUrl && (
+        <div className="flex flex-1 justify-start items-center p-5">
+          <Image
+            src={fileUrl}
+            alt="image"
+            className="object-cover rounded-xl"
+            width={200}
+            height={200}
+            unoptimized
+          />
+        </div>
+      )}
+
+      {!fileUrl && value && (
+        <div className="flex flex-1 justify-start items-center p-5">
+          <Image
+            src={value}
+            alt="image"
+            className="object-cover rounded-xl"
+            width={200}
+            height={200}
+            unoptimized
+          />
+        </div>
+      )}
+
+      {!fileUrl && !value && (
         <div className="relative p-1 flex flex-col justify-center items-center">
           <Image
             src="/full-logo-white-transparent.png"

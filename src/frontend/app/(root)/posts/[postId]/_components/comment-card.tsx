@@ -14,6 +14,10 @@ import { useGetUserFromAuth } from "@/lib/react-query/queries";
 import { Loader } from "@/components/loader";
 import { Button } from "@/components/ui/button";
 import {
+  useDeleteComment,
+  useUpdateComment,
+} from "@/lib/react-query/mutations";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -22,10 +26,6 @@ import {
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EmojiPicker } from "@/components/emoji-picker";
-import {
-  useDeleteComment,
-  useUpdateComment,
-} from "@/lib/react-query/mutations";
 import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
@@ -138,7 +138,7 @@ export const CommentCard = ({ comment }: Props) => {
           className="object-cover rounded-full"
         />
       </Link>
-      {!isEditing && !isLoading && (
+      {!isEditing && (
         <div className="flex items-start justify-start ml-2 gap-2 w-full">
           <p className="text-xs font-bold tracking-wider">
             {comment.user.username}

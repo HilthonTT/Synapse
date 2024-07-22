@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import { IconCirclePlus } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 import { LeftSidebarLinks } from "@/constants";
 import { Loader } from "@/components/loader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spotlight } from "@/components/ui/spotlight";
-import { CreatePostModal } from "@/components/modals/create-post-modal";
+import { FormPostModal } from "@/components/modals/form-post-modal";
 
 export const LeftSidebar = () => {
   const pathname = usePathname();
@@ -53,7 +54,14 @@ export const LeftSidebar = () => {
             );
           })}
 
-          <CreatePostModal />
+          <FormPostModal>
+            <li className="sidebar-link">
+              <div className="flex gap-4 items-center p-3">
+                <IconCirclePlus />
+                <p className="base-medium">Create</p>
+              </div>
+            </li>
+          </FormPostModal>
 
           {isLoaded && isSignedIn && (
             <li

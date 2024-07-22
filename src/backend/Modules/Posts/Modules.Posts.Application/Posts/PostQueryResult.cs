@@ -10,6 +10,8 @@ internal sealed class PostQueryResult
 
     public string Tags { get; set; } = string.Empty;
 
+    public string Location { get; set; } = string.Empty;
+
     public int LikesCount { get; set; }
 
     public int CommentsCount { get; set; }

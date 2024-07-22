@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { createPost } from "@/actions/post";
+import { createPost, deletePost, updatePost } from "@/actions/post";
 import { likePost, unlikePost } from "@/actions/likes";
 import { QUERY_KEYS } from "@/lib/react-query/query-keys";
 import {
@@ -101,6 +101,49 @@ export const useDeleteComment = (postId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_POST_COMMENTS, { postId }],
+      });
+    },
+  });
+
+  return mutation;
+};
+
+export const useUpdatePost = (postId: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      title,
+      tags,
+      location,
+      imageUrl,
+    }: {
+      title: string;
+      tags?: string;
+      location?: string;
+      imageUrl: string;
+    }) => await updatePost(postId, title, imageUrl, tags, location),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, { postId }],
+      });
+    },
+  });
+
+  return mutation;
+};
+
+export const useDeletePost = (postId: string) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () => await deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, { postId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POSTS],
       });
     },
   });

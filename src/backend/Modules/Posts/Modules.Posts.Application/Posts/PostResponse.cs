@@ -7,6 +7,7 @@ public sealed record PostResponse(
     string Title, 
     string ImageUrl, 
     string Tags,
+    string Location,
     UserResponse Creator,
     int LikesCount,
     int CommentsCount);

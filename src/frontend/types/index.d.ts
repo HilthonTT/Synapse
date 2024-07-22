@@ -25,6 +25,7 @@ declare type Post = {
   title: string;
   imageUrl: string;
   tags: string;
+  location: string;
   creator: User;
   likesCount: number;
   commentsCount: number;

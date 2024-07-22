@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { IconCirclePlus } from "@tabler/icons-react";
 
 import { PostForm } from "@/components/form/post-form";
 import {
@@ -16,22 +15,20 @@ export enum STEPS {
   INFO = 1,
 }
 
-export const CreatePostModal = () => {
+type Props = {
+  post?: Post;
+  children: React.ReactNode;
+};
+
+export const FormPostModal = ({ post, children }: Props) => {
   const [step, setStep] = useState<STEPS>(STEPS.IMAGE);
 
   return (
     <Modal>
-      <ModalTrigger className="p-0">
-        <li className="sidebar-link">
-          <div className="flex gap-4 items-center p-3">
-            <IconCirclePlus />
-            <p className="base-medium">Create</p>
-          </div>
-        </li>
-      </ModalTrigger>
+      <ModalTrigger className="p-0">{children}</ModalTrigger>
       <ModalBody>
         <ModalContent>
-          <PostForm step={step} setStep={setStep} />
+          <PostForm post={post} step={step} setStep={setStep} />
         </ModalContent>
       </ModalBody>
     </Modal>

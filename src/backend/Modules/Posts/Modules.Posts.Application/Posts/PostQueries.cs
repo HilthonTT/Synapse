@@ -20,6 +20,7 @@ public static class PostQueries
                     p.image_url AS ImageUrl,
                     p.tags AS Tags,
                     p.created_on_utc AS CreatedOnUtc,
+                    p.location AS Location,
                     u.id AS UserId,
                     u.name AS Name,
                     u.username AS Username,
@@ -66,6 +67,7 @@ public static class PostQueries
                     result.Title,
                     result.ImageUrl,
                     result.Tags,
+                    result.Location,
                     userResponse,
                     result.LikesCount,
                     result.CommentsCount);
@@ -89,6 +91,7 @@ public static class PostQueries
                 p.title AS Title,
                 p.image_url AS ImageUrl,
                 p.tags AS Tags,
+                p.location AS Location,
                 (
                     SELECT COUNT(*)
                     FROM posts.likes l
@@ -108,27 +111,29 @@ public static class PostQueries
             WHERE p.id = @PostId;
             """;
 
-        PostQueryResult? postResult = await connection.QueryFirstOrDefaultAsync<PostQueryResult>(
+        PostQueryResult? result = await connection.QueryFirstOrDefaultAsync<PostQueryResult>(
             sql, 
             new { PostId = postId });
-        if (postResult is null)
+
+        if (result is null)
         {
             return null;
         }
 
         var userResponse = new UserResponse(
-            postResult.UserId,
-            postResult.UserName,
-            postResult.UserUsername,
-            postResult.UserImageUrl);
+            result.UserId,
+            result.UserName,
+            result.UserUsername,
+            result.UserImageUrl);
 
         return new PostResponse(
-            postResult.Id,
-            postResult.Title,
-            postResult.ImageUrl,
-            postResult.Tags,
+            result.Id,
+            result.Title,
+            result.ImageUrl,
+            result.Tags,
+            result.Location,
             userResponse,
-            postResult.LikesCount,
-            postResult.CommentsCount);
+            result.LikesCount,
+            result.CommentsCount);
     }
 }
