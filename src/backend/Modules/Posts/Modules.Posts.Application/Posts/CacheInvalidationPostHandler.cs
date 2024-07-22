@@ -30,6 +30,7 @@ internal sealed class CacheInvalidationPostHandler(ICacheService cacheService) :
     {
         await Task.WhenAll(
             cacheService.RemoveAsync($"posts-{postId}", cancellationToken),
-            cacheService.RemoveKeysWithPrefixAsync("posts-cursor", cancellationToken));
+            cacheService.RemoveKeysWithPrefixAsync("posts-cursor", cancellationToken),
+            cacheService.RemoveKeysWithPrefixAsync("posts-search", cancellationToken));
     }
 }
