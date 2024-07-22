@@ -22,8 +22,11 @@ internal sealed class SearchPostsQueryHandler(IPostRepository postRepository)
                 p.Id,
                 p.UserId,
                 p.Title,
+                p.ImageUrl,
                 p.Tags,
                 p.Location,
+                p.Likes.Count,
+                p.Comments.Count,
                 p.CreatedOnUtc,
                 p.ModifiedOnUtc))
             .ToList();

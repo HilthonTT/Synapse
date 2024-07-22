@@ -68,3 +68,16 @@ declare type Like = {
   postId: string;
   userId: string;
 };
+
+declare type SearchPost = {
+  id: string;
+  userId: string;
+  title: string;
+  imageUrl: string;
+  tags?: string;
+  location?: string;
+  createdOnUtc: Date;
+  modifiedOnUtc?: Date;
+  likesCount: number;
+  commentsCount: number;
+};

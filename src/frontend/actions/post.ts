@@ -4,6 +4,7 @@ import qs from "query-string";
 import { v4 as uuid } from "uuid";
 
 import { createAxiosInstance } from "@/lib/axios.config";
+import { SortColumn, SortOrder } from "@/lib/react-query/queries";
 import { getUserFromAuth } from "@/actions/user";
 
 export const createPost = async ({
@@ -138,5 +139,35 @@ export const deletePost = async (postId: string) => {
   } catch (error) {
     console.error("UPDATE_POST", error);
     throw new Error("Failed to delete post");
+  }
+};
+
+export const searchPosts = async (
+  sortOrder: SortOrder,
+  sortColumn: SortColumn,
+  searchTerm?: string,
+  limit = 10
+) => {
+  try {
+    const api = await createAxiosInstance();
+
+    const url = qs.stringifyUrl({
+      url: `/api/v1/posts/search`,
+      query: {
+        searchTerm,
+        sortOrder,
+        sortColumn,
+        limit,
+      },
+    });
+
+    const response = await api.get(url);
+
+    const posts = response.data as SearchPost[];
+
+    return posts;
+  } catch (error) {
+    console.error("SEARCH_POSTS", error);
+    return [];
   }
 };

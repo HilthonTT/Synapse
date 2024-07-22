@@ -1,10 +1,22 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import { QUERY_KEYS } from "@/lib/react-query/query-keys";
-import { getPostById, getPosts } from "@/actions/post";
+import { getPostById, getPosts, searchPosts } from "@/actions/post";
 import { getCommentsByPostId } from "@/actions/comments";
 import { getLikesByPostId } from "@/actions/likes";
 import { getUserFromAuth } from "@/actions/user";
+
+export enum SortColumn {
+  LIKES = 0,
+  COMMENTS = 1,
+  CREATED_On_UTC = 2,
+  TITLE = 3,
+}
+
+export enum SortOrder {
+  ASCENDING = 0,
+  DESCENDING = 1,
+}
 
 export const useGetInfinitePosts = () => {
   const query = useInfiniteQuery<CursorPaginationPost, Error>({
@@ -54,7 +66,29 @@ export const useGetPostLikes = (postId: string) => {
 export const useGetUserFromAuth = () => {
   const query = useQuery({
     queryKey: [QUERY_KEYS.GET_USER_FROM_AUTH],
-    queryFn: async () => getUserFromAuth(),
+    queryFn: async () => await getUserFromAuth(),
+  });
+
+  return query;
+};
+
+export const useSearchPosts = (
+  searchTerm?: string,
+  sortOrder = SortOrder.DESCENDING,
+  sortColumn = SortColumn.LIKES,
+  limit = 10
+) => {
+  const query = useQuery({
+    queryKey: [
+      QUERY_KEYS.GET_SEARCH_POSTS,
+      {
+        searchTerm,
+        sortOrder,
+        sortColumn,
+      },
+    ],
+    queryFn: async () =>
+      await searchPosts(sortOrder, sortColumn, searchTerm, limit),
   });
 
   return query;

@@ -22,6 +22,7 @@ export function PlaceholdersVanishInput({
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
     }, 3000);
   };
+
   const handleVisibilityChange = () => {
     if (document.visibilityState !== "visible" && intervalRef.current) {
       clearInterval(intervalRef.current); // Clear the interval when the tab is not visible
@@ -50,11 +51,18 @@ export function PlaceholdersVanishInput({
   const [animating, setAnimating] = useState(false);
 
   const draw = useCallback(() => {
-    if (!inputRef.current) return;
+    if (!inputRef.current) {
+      return;
+    }
+
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      return;
+    }
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!ctx) {
+      return;
+    }
 
     canvas.width = 800;
     canvas.height = 800;
@@ -124,8 +132,10 @@ export function PlaceholdersVanishInput({
             newArr.push(current);
           }
         }
+
         newDataRef.current = newArr;
         const ctx = canvasRef.current?.getContext("2d");
+
         if (ctx) {
           ctx.clearRect(pos, 0, 800, 800);
           newDataRef.current.forEach((t) => {
@@ -147,6 +157,7 @@ export function PlaceholdersVanishInput({
         }
       });
     };
+
     animateFrame(start);
   };
 
@@ -156,25 +167,32 @@ export function PlaceholdersVanishInput({
     }
   };
 
-  const vanishAndSubmit = () => {
+  const vanishAndSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     setAnimating(true);
     draw();
 
-    const value = inputRef.current?.value || "";
-    if (value && inputRef.current) {
+    const currentValue = inputRef.current?.value || "";
+    if (currentValue) {
       const maxX = newDataRef.current.reduce(
         (prev, current) => (current.x > prev ? current.x : prev),
         0
       );
       animate(maxX);
+    } else {
+      setValue(""); // This line can be kept or adjusted based on your needs
+      setAnimating(false); // Stop animating if the value is empty
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    vanishAndSubmit();
-    onSubmit && onSubmit(e);
+    vanishAndSubmit(e);
+
+    if (onSubmit) {
+      onSubmit(e);
+    }
   };
+
   return (
     <form
       className={cn(
@@ -207,7 +225,6 @@ export function PlaceholdersVanishInput({
       />
 
       <button
-        disabled={!value}
         type="submit"
         className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-black dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center">
         <motion.svg

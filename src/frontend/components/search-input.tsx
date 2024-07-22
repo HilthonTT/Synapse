@@ -1,11 +1,21 @@
-import { PlaceholdersVanishInput } from "@/components/ui/placeholders-vanish-input";
+"use client";
+
+import qs from "query-string";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { cn } from "@/lib/utils";
+import { PlaceholdersVanishInput } from "@/components/ui/placeholders-vanish-input";
 
 type Props = {
   className?: string;
 };
 
 export const SearchInput = ({ className }: Props) => {
+  const router = useRouter();
+
+  const [value, setValue] = useState("");
+
   const placeholders = [
     "Search...",
     "Find friends, posts, or groups",
@@ -23,12 +33,23 @@ export const SearchInput = ({ className }: Props) => {
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+    setValue(e.target.value);
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitted");
+
+    const url = qs.stringifyUrl(
+      {
+        url: "/search",
+        query: {
+          searchTerm: value,
+        },
+      },
+      { skipEmptyString: true, skipNull: true }
+    );
+
+    router.push(url);
   };
 
   return (

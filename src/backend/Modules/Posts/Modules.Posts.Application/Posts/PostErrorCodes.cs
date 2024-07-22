@@ -24,4 +24,10 @@ public static class PostErrorCodes
         public const string MissingPostId = nameof(MissingPostId);
         public const string MissingUserId = nameof(MissingUserId);
     }
+
+    public static class SearchPosts
+    {
+        public const string IncorrectSortOrder = nameof(IncorrectSortOrder);
+        public const string IncorrectSortColumn = nameof(IncorrectSortColumn);
+    }
 }
