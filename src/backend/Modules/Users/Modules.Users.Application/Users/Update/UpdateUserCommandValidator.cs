@@ -16,6 +16,9 @@ internal sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserC
         RuleFor(c => c.Name)
             .NotEmpty().WithErrorCode(UserErrorCodes.UpdateUser.MissingName);
 
+        RuleFor(c => c.Username)
+            .NotEmpty().WithErrorCode(UserErrorCodes.UpdateUser.MissingUsername);
+
         RuleFor(c => c.ImageUrl)
             .NotEmpty().WithErrorCode(UserErrorCodes.UpdateUser.MissingImageUrl);
     }

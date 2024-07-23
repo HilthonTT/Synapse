@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Modules\Users\Modules.Users.Application\Modules.Users.Application.csproj" />
   </ItemGroup>
 
+   <ItemGroup>
+	 <InternalsVisibleTo Include="Api.FunctionalTests" />
+   </ItemGroup>
+
 </Project>

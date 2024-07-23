@@ -16,6 +16,9 @@ internal sealed class CreateUserCommandValidator : AbstractValidator<CreateUserC
         RuleFor(c => c.Name)
             .NotEmpty().WithErrorCode(UserErrorCodes.CreateUser.MissingName);
 
+        RuleFor(c => c.Username)
+            .NotEmpty().WithErrorCode(UserErrorCodes.CreateUser.MissingUsername);
+
         RuleFor(c => c.ImageUrl)
             .NotEmpty().WithErrorCode(UserErrorCodes.CreateUser.MissingImageUrl);
     }

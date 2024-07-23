@@ -7,6 +7,7 @@ public static class UserErrorCodes
         public const string MissingObjectIdentifier = nameof(MissingObjectIdentifier);
         public const string MissingEmail = nameof(MissingEmail);
         public const string MissingName = nameof(MissingName);
+        public const string MissingUsername = nameof(MissingUsername);
         public const string MissingImageUrl = nameof(MissingImageUrl);
         public const string InvalidEmail = nameof(InvalidEmail);
     }
@@ -16,6 +17,7 @@ public static class UserErrorCodes
         public const string MissingId = nameof(MissingId);
         public const string MissingEmail = nameof(MissingEmail);
         public const string MissingName = nameof(MissingName);
+        public const string MissingUsername = nameof(MissingUsername);
         public const string MissingImageUrl = nameof(MissingImageUrl);
         public const string InvalidEmail = nameof(InvalidEmail);
     }

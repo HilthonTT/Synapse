@@ -8,7 +8,7 @@ namespace Infrastructure.Caching;
 
 internal sealed class CacheService(IDistributedCache cache) : ICacheService
 {
-    private static readonly ConcurrentDictionary<string, bool> KeyIndex = [];
+    private static readonly ConcurrentDictionary<string, bool> CacheKeys = [];
 
     public async Task<T?> GetAsync<T>(
         string key, 
@@ -31,27 +31,22 @@ internal sealed class CacheService(IDistributedCache cache) : ICacheService
 
         await cache.SetAsync(key, bytes, options, cancellationToken);
 
-        KeyIndex.TryAdd(key, true);
+        CacheKeys.TryAdd(key, true);
     }
 
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
         await cache.RemoveAsync(key, cancellationToken);
 
-        KeyIndex.TryRemove(key, out _);
+        CacheKeys.TryRemove(key, out _);
     }
 
-    public async Task RemoveKeysWithPrefixAsync(string prefix, CancellationToken cancellationToken = default)
+    public async Task RemoveKeysWithPrefixAsync(string prefixKey, CancellationToken cancellationToken = default)
     {
-        List<string> keysToRemove = KeyIndex.Keys.Where(key => key.StartsWith(prefix)).ToList();
-
-        var tasks = new List<Task>();
-
-        foreach (var key in keysToRemove)
-        {
-            tasks.Add(cache.RemoveAsync(key, cancellationToken));
-            KeyIndex.TryRemove(key, out _);
-        }
+        IEnumerable<Task> tasks = CacheKeys
+            .Keys
+            .Where(k => k.StartsWith(prefixKey))
+            .Select(k => RemoveAsync(k, cancellationToken));
 
         await Task.WhenAll(tasks);
     }
