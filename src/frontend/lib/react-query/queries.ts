@@ -4,7 +4,11 @@ import { QUERY_KEYS } from "@/lib/react-query/query-keys";
 import { getPostById, getPosts, searchPosts } from "@/actions/post";
 import { getCommentsByPostId } from "@/actions/comments";
 import { getLikesByPostId } from "@/actions/likes";
-import { getUserFromAuth } from "@/actions/user";
+import {
+  getFollowerStatsByUserId,
+  getUserFromAuth,
+  getUsers,
+} from "@/actions/user";
 
 export enum SortColumn {
   LIKES = 0,
@@ -89,6 +93,24 @@ export const useSearchPosts = (
     ],
     queryFn: async () =>
       await searchPosts(sortOrder, sortColumn, searchTerm, limit),
+  });
+
+  return query;
+};
+
+export const useGetUsers = () => {
+  const query = useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: async () => await getUsers(),
+  });
+
+  return query;
+};
+
+export const useGetUserFollowerStats = (userId: string) => {
+  const query = useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_FOLLOWER_STATS],
+    queryFn: async () => await getFollowerStatsByUserId(userId),
   });
 
   return query;

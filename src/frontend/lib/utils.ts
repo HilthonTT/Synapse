@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -38,4 +39,27 @@ export const hasLiked = (userId: string | undefined, likes: Like[]) => {
   const like = likes.find((like) => like.userId === userId);
 
   return !!like;
+};
+
+export const formatFollowerCountLabel = (followerStat: FollowerStats) => {
+  const { followerCount } = followerStat;
+
+  if (followerCount === 1) {
+    return "1 Follower";
+  }
+
+  let formattedCount: string;
+
+  if (followerCount >= 1_000_000) {
+    formattedCount = `${(followerCount / 1_000_000).toFixed(1)}M`;
+  } else if (followerCount >= 1_000) {
+    formattedCount = `${(followerCount / 1_000).toFixed(1)}k`;
+  } else {
+    formattedCount = followerCount.toString();
+  }
+
+  // Remove any trailing '.0' for whole numbers
+  formattedCount = formattedCount.replace(/\.0$/, "");
+
+  return `${formattedCount} followers`;
 };

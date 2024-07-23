@@ -13,11 +13,20 @@ declare type UserFromAuth = {
   imageUrl: string;
 };
 
-declare type User = {
+declare type UserPost = {
   userId: string;
   name: string;
   username: string;
   imageUrl: string;
+};
+
+declare type User = {
+  id: string;
+  name: string;
+  username: string;
+  imageUrl: string;
+  createdOnUtc: Date;
+  modifiedOnUtc?: Date;
 };
 
 declare type Post = {
@@ -26,7 +35,7 @@ declare type Post = {
   imageUrl: string;
   tags: string;
   location: string;
-  creator: User;
+  creator: UserPost;
   likesCount: number;
   commentsCount: number;
 };
@@ -59,7 +68,7 @@ declare type PostComment = {
   id: string;
   postId: string;
   content: string;
-  user: User;
+  user: UserPost;
   createdOnUtc: Date;
   modifiedOnUtc?: Date;
 };
@@ -80,4 +89,10 @@ declare type SearchPost = {
   modifiedOnUtc?: Date;
   likesCount: number;
   commentsCount: number;
+};
+
+declare type FollowerStats = {
+  userId: string;
+  followerCount: number;
+  followingCount: number;
 };

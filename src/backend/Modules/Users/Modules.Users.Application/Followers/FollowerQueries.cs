@@ -41,7 +41,7 @@ public static class FollowerQueries
         const string sql =
             """
             SELECT
-                @UserId as UserId
+                @UserId as UserId,
                 (
                     SELECT COUNT(*)
                     FROM users.followers f
