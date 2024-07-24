@@ -1,6 +1,4 @@
-﻿using Modules.Users.Api;
-
-namespace Modules.Posts.Application.Posts;
+﻿namespace Modules.Posts.Application.Posts;
 
 public sealed record PostResponse(
     Guid Id, 
@@ -8,6 +6,6 @@ public sealed record PostResponse(
     string ImageUrl, 
     string Tags,
     string Location,
-    UserResponse Creator,
+    UserPostResponse Creator,
     int LikesCount,
     int CommentsCount);

@@ -10,6 +10,7 @@ public static class UserErrorCodes
         public const string MissingUsername = nameof(MissingUsername);
         public const string MissingImageUrl = nameof(MissingImageUrl);
         public const string InvalidEmail = nameof(InvalidEmail);
+        public const string InvalidImageUrl = nameof(InvalidImageUrl);
     }
 
     public static class UpdateUser
@@ -20,5 +21,6 @@ public static class UserErrorCodes
         public const string MissingUsername = nameof(MissingUsername);
         public const string MissingImageUrl = nameof(MissingImageUrl);
         public const string InvalidEmail = nameof(InvalidEmail);
+        public const string InvalidImageUrl = nameof(InvalidImageUrl);
     }
 }

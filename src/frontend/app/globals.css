@@ -170,4 +170,17 @@ body,
   .bottom-bar {
     @apply z-50 w-full flex-between fixed bottom-0 rounded-t-2xl bg-dark-2 md:hidden py-5 px-2;
   }
+
+  /* Profile */
+  .profile-container {
+    @apply flex flex-col items-center flex-1 gap-10 overflow-scroll py-10 px-5 md:p-14 custom-scrollbar;
+  }
+
+  .profile-inner_container {
+    @apply flex items-center md:mb-8 xl:items-start gap-8 flex-col xl:flex-row relative max-w-5xl w-full;
+  }
+
+  .profile-tab {
+    @apply flex-center gap-3 py-4 w-48 bg-dark-2  transition flex-1 xl:flex-initial;
+  }
 }

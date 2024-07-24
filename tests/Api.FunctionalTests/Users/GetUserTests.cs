@@ -1,6 +1,6 @@
 ﻿using Api.FunctionalTests.Abstractions;
 using FluentAssertions;
-using Modules.Users.Api;
+using Modules.Users.Application.Users;
 using Presentation.Contracts.Users;
 using System.Net;
 using System.Net.Http.Json;
@@ -42,7 +42,12 @@ public sealed class GetUserTests : BaseFunctionalTest
 
     private async Task<Guid> CreateUserAsync()
     {
-        var request = new CreateUserRequest("test-oid", "test@test.com", "username", "name", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(), 
+            Faker.Internet.Email(), 
+            Faker.Internet.UserName(), 
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync($"api/{ApiVersion}/users", request);
 

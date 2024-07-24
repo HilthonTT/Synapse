@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Modules.Users.Api;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Modules.Posts.Application.Posts;
@@ -56,7 +56,7 @@ public static class PostQueries
             .Take(limit)
             .Select(result =>
             {
-                var userResponse = new UserResponse(
+                var userResponse = new UserPostResponse(
                     result.UserId,
                     result.UserName,
                     result.UserUsername,
@@ -120,7 +120,7 @@ public static class PostQueries
             return null;
         }
 
-        var userResponse = new UserResponse(
+        var userResponse = new UserPostResponse(
             result.UserId,
             result.UserName,
             result.UserUsername,
@@ -135,5 +135,67 @@ public static class PostQueries
             userResponse,
             result.LikesCount,
             result.CommentsCount);
+    }
+
+    public static async Task<List<PostResponse>> GetByUserIdAsync(
+        IDbConnection connection,
+        Guid userId)
+    {
+        const string sql =
+            """
+            SELECT
+                p.id AS Id,
+                p.title AS Title,
+                p.image_url AS ImageUrl,
+                p.tags AS Tags,
+                p.location AS Location,
+                (
+                    SELECT COUNT(*)
+                    FROM posts.likes l
+                    WHERE l.post_id = p.id
+                ) AS LikesCount,
+                (
+                    SELECT COUNT(*)
+                    FROM posts.comments c
+                    WHERE c.post_id = p.id
+                ) AS CommentsCount,
+                u.id AS UserId,
+                u.name AS UserName,
+                u.username AS UserUsername,
+                u.image_url AS UserImageUrl
+            FROM posts.posts p
+            LEFT JOIN users.users u ON u.id = p.user_id
+            WHERE p.user_id = @UserId;
+            """;
+
+        IEnumerable<PostQueryResult> results = await connection.QueryAsync<PostQueryResult>(
+             sql,
+             new
+             {
+                 UserId = userId,
+             });
+
+        List<PostResponse> posts = results
+            .Select(result =>
+            {
+                var userResponse = new UserPostResponse(
+                    result.UserId,
+                    result.UserName,
+                    result.UserUsername,
+                    result.UserImageUrl);
+
+                return new PostResponse(
+                    result.Id,
+                    result.Title,
+                    result.ImageUrl,
+                    result.Tags,
+                    result.Location,
+                    userResponse,
+                    result.LikesCount,
+                    result.CommentsCount);
+            })
+            .ToList();
+
+        return posts;
     }
 }

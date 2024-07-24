@@ -8,6 +8,7 @@ public static class PostErrorCodes
         public const string MissingTitle = nameof(MissingTitle);
         public const string MissingImageUrl = nameof(MissingImageUrl);
         public const string TitleTooLong = nameof(TitleTooLong);
+        public const string InvalidImageUrl = nameof(InvalidImageUrl);
     }
 
     public static class UpdatePost
@@ -17,6 +18,7 @@ public static class PostErrorCodes
         public const string MissingTitle = nameof(MissingTitle);
         public const string MissingImageUrl = nameof(MissingImageUrl);
         public const string TitleTooLong = nameof(TitleTooLong);
+        public const string InvalidImageUrl = nameof(InvalidImageUrl);
     }
 
     public static class RemovePost

@@ -27,7 +27,13 @@ public sealed class CreatePostTests : BaseIntegrationTest
 
         Guid userId = (await Sender.Send(createdUser)).Value;
 
-        var command = new CreatePostCommand(Guid.NewGuid(), userId, "Test title", "Test image", "Location", "Tags");
+        var command = new CreatePostCommand(
+            Guid.NewGuid(),
+            userId,
+            Faker.Lorem.Word(),
+            Faker.Internet.Url(),
+            Faker.Lorem.Sentence(),
+            Faker.Lorem.Sentence());
 
         // Act
         Result<Guid> result = await Sender.Send(command);
@@ -49,7 +55,13 @@ public sealed class CreatePostTests : BaseIntegrationTest
 
         Guid userId = (await Sender.Send(createdUser)).Value;
 
-        var command = new CreatePostCommand(Guid.NewGuid(), userId, "Test title", "Test image", "Location", "Tags");
+        var command = new CreatePostCommand(
+            Guid.NewGuid(),
+            userId,
+            Faker.Lorem.Word(),
+            Faker.Internet.Url(),
+            Faker.Lorem.Sentence(),
+            Faker.Lorem.Sentence());
 
         // Act
         Result<Guid> result = await Sender.Send(command);

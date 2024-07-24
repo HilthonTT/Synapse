@@ -20,7 +20,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnBadRequest_WhenEmailIsMissing()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "", "username", "name", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            "",
+            Faker.Internet.UserName(),
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -42,7 +47,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnBadRequest_WhenEmailIsInvalid()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "test", "username", "name", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            "test",
+            Faker.Internet.UserName(),
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -61,7 +71,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnOk_WhenRequestIsValid()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "test@test.com", "username", "name", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            Faker.Internet.Email(),
+            Faker.Internet.UserName(),
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -74,7 +89,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnConflict_WhenUserExists()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "test@test.com", "username", "name", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            Faker.Internet.Email(),
+            Faker.Internet.UserName(),
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         // Act
         await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -89,7 +109,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnBadRequest_WhenObjectIdentifierIsMissing()
     {
         // Arrange
-        var request = new CreateUserRequest("", "test@test.com", "username", "name", "image");
+        var request = new CreateUserRequest(
+            "",
+            Faker.Internet.Email(),
+            Faker.Internet.UserName(),
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -110,7 +135,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnBadRequest_WhenNameIsMissing()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "test@test.com", "username", "", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            Faker.Internet.Email(),
+            Faker.Internet.UserName(),
+            "",
+            Faker.Internet.Url());
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -131,7 +161,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnBadRequest_WhenUsernameIsMissing()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "test@test.com", "", "name", "image");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            Faker.Internet.Email(),
+            "",
+            Faker.Internet.UserName(),
+            Faker.Internet.Url());
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);
@@ -152,7 +187,12 @@ public sealed class CreateUserTests : BaseFunctionalTest
     public async Task Should_ReturnBadRequest_WhenImageUrlIsMissing()
     {
         // Arrange
-        var request = new CreateUserRequest("test-oid", "test@test.com", "username", "name", "");
+        var request = new CreateUserRequest(
+            Guid.NewGuid().ToString(),
+            Faker.Internet.Email(),
+            Faker.Internet.UserName(),
+            Faker.Internet.UserName(),
+            "");
 
         // Act
         HttpResponseMessage response = await HttpClient.PostAsJsonAsync(UsersEndpoint, request);

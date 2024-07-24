@@ -54,7 +54,7 @@ export const EvervaultCard = ({ text, className, imageUrl }: Props) => {
                 src={imageUrl}
                 fill
                 alt="image"
-                className="object-cover p-5"
+                className="object-cover p-5 pointer-events-none"
               />
             )}
             <span className="dark:text-white text-black z-20">{text}</span>

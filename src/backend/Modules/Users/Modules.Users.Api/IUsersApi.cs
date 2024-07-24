@@ -2,5 +2,5 @@
 
 public interface IUsersApi
 {
-    Task<UserResponse?> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<UserApiResponse?> GetAsync(Guid id, CancellationToken cancellationToken = default);
 }

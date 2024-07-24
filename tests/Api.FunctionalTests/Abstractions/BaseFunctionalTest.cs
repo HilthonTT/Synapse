@@ -1,4 +1,6 @@
-﻿namespace Api.FunctionalTests.Abstractions;
+﻿using Bogus;
+
+namespace Api.FunctionalTests.Abstractions;
 
 public abstract class BaseFunctionalTest(FunctionalTestWebAppFactory factory) 
     : IClassFixture<FunctionalTestWebAppFactory>
@@ -8,4 +10,6 @@ public abstract class BaseFunctionalTest(FunctionalTestWebAppFactory factory)
     protected const string UsersEndpoint = $"api/{ApiVersion}/users";
 
     protected HttpClient HttpClient { get; set; } = factory.CreateClient();
+
+    protected Faker Faker { get; init; } = new();
 }

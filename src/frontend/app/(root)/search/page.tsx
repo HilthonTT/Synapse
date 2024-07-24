@@ -1,14 +1,13 @@
 "use client";
 
 import { Loader } from "@/components/loader";
+import { PostCard } from "@/components/post-card";
 import { SearchInput } from "@/components/search-input";
 import {
   SortColumn,
   SortOrder,
   useSearchPosts,
 } from "@/lib/react-query/queries";
-
-import { PostCard } from "./_components/post-card";
 
 type Props = {
   searchParams: {

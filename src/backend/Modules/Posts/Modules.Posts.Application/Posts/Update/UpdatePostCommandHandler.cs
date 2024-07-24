@@ -17,7 +17,7 @@ internal sealed class UpdatePostCommandHandler(
 {
     public async Task<Result> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        UserResponse? user = await usersApi.GetAsync(request.UserId, cancellationToken);
+        UserApiResponse? user = await usersApi.GetAsync(request.UserId, cancellationToken);
         if (user is null)
         {
             return Result.Failure<Guid>(UserErrors.NotFound(request.UserId));

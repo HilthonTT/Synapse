@@ -1,3 +1,5 @@
+"use client";
+
 import {
   FormControl,
   FormField,
@@ -47,7 +49,11 @@ export const InfoStep = ({ form, className, disabled }: Props) => {
             </FormLabel>
 
             <FormControl>
-              <Input {...field} placeholder="Holiday, Trip, Friends" />
+              <Input
+                {...field}
+                placeholder="Holiday, Trip, Friends"
+                disabled={disabled}
+              />
             </FormControl>
 
             <FormMessage />
@@ -63,7 +69,7 @@ export const InfoStep = ({ form, className, disabled }: Props) => {
             <FormLabel>Add Location</FormLabel>
 
             <FormControl>
-              <Input {...field} placeholder="Wall Street" />
+              <Input {...field} placeholder="Wall Street" disabled={disabled} />
             </FormControl>
 
             <FormMessage />

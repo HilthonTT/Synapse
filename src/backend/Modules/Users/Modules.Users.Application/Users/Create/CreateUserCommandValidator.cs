@@ -20,6 +20,13 @@ internal sealed class CreateUserCommandValidator : AbstractValidator<CreateUserC
             .NotEmpty().WithErrorCode(UserErrorCodes.CreateUser.MissingUsername);
 
         RuleFor(c => c.ImageUrl)
-            .NotEmpty().WithErrorCode(UserErrorCodes.CreateUser.MissingImageUrl);
+            .NotEmpty().WithErrorCode(UserErrorCodes.CreateUser.MissingImageUrl)
+            .Must(BeAValidUrl).WithErrorCode(UserErrorCodes.CreateUser.InvalidImageUrl);
+    }
+
+    private static bool BeAValidUrl(string imageUrl)
+    {
+        return Uri.TryCreate(imageUrl, UriKind.Absolute, out Uri? uriResult)
+               && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
 }

@@ -25,7 +25,7 @@ export const Header = ({ post }: Props) => {
   const { data: user, isLoading } = useGetUserFromAuth();
 
   const loadCreatorPage = () => {
-    router.push(`/user/${post.creator.userId}`);
+    router.push(`/users/${post.creator.userId}`);
   };
 
   const isOwner = user?.id === post.creator.userId;

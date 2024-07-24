@@ -14,6 +14,13 @@ internal sealed class CreatePostCommandValidator : AbstractValidator<CreatePostC
             .MaximumLength(200).WithErrorCode(PostErrorCodes.CreatePost.TitleTooLong);
 
         RuleFor(c => c.ImageUrl)
-            .NotEmpty().WithErrorCode(PostErrorCodes.CreatePost.MissingImageUrl);
+            .NotEmpty().WithErrorCode(PostErrorCodes.CreatePost.MissingImageUrl)
+            .Must(BeAValidUrl).WithErrorCode(PostErrorCodes.CreatePost.InvalidImageUrl);
+    }
+
+    private static bool BeAValidUrl(string imageUrl)
+    {
+        return Uri.TryCreate(imageUrl, UriKind.Absolute, out Uri? uriResult)
+               && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     }
 }

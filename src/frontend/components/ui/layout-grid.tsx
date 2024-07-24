@@ -45,7 +45,7 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
             )}
             layout>
             {selected?.id === card.id && <SelectedCard selected={selected} />}
-            <BlurImage card={card} />
+            <BlurImage card={card} selected={selected} />
           </motion.div>
         </div>
       ))}
@@ -61,7 +61,13 @@ export const LayoutGrid = ({ cards }: { cards: Card[] }) => {
   );
 };
 
-const BlurImage = ({ card }: { card: Card }) => {
+const BlurImage = ({
+  card,
+  selected,
+}: {
+  card: Card;
+  selected: Card | null;
+}) => {
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -71,8 +77,9 @@ const BlurImage = ({ card }: { card: Card }) => {
       width="500"
       onLoad={() => setLoaded(true)}
       className={cn(
-        "object-cover object-top md:absolute inset-0 size-full transition duration-200",
-        loaded ? "blur-none" : "blur-md"
+        "object-cover md:absolute inset-0 size-full transition duration-200",
+        loaded ? "blur-none" : "blur-md",
+        selected?.id === card.id && "object-top"
       )}
       alt="thumbnail"
       unoptimized

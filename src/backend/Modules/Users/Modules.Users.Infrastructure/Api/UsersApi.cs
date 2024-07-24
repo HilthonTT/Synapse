@@ -6,11 +6,11 @@ namespace Modules.Users.Infrastructure.Api;
 
 internal sealed class UsersApi(UsersDbContext context) : IUsersApi
 {
-    public Task<UserResponse?> GetAsync(Guid id, CancellationToken cancellationToken = default)
+    public Task<UserApiResponse?> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return context.Users
             .Where(u => u.Id == id)
-            .Select(u => new UserResponse(u.Id, u.Name.Value, u.Username.Value, u.ImageUrl))
+            .Select(u => new UserApiResponse(u.Id, u.Name.Value, u.Username.Value, u.ImageUrl))
             .FirstOrDefaultAsync(cancellationToken);
     }
 }

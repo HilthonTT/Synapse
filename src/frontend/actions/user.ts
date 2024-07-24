@@ -50,3 +50,33 @@ export const getFollowerStatsByUserId = async (userId: string) => {
     return null;
   }
 };
+
+export const getUserById = async (userId: string) => {
+  try {
+    const api = await createAxiosInstance();
+
+    const response = await api.get(`/api/v1/users/${userId}`);
+
+    const user = response.data as User;
+
+    return user;
+  } catch (error) {
+    console.log("GET_USER_BY_ID", error);
+    return null;
+  }
+};
+
+export const getUserPosts = async (userId: string) => {
+  try {
+    const api = await createAxiosInstance();
+
+    const response = await api.get(`/api/v1/users/${userId}/posts`);
+
+    const posts = response.data as Post[];
+
+    return posts;
+  } catch (error) {
+    console.log("GET_USER_POSTS", error);
+    return [];
+  }
+};

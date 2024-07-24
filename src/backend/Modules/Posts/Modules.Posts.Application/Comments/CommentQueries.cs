@@ -35,7 +35,7 @@ public static class CommentQueries
 
         List<CommentResponse> comments = results.Select(result =>
         {
-            var userResponse = new UserResponse(
+            var userResponse = new UserApiResponse(
                 result.UserId,
                 result.Name,
                 result.Username,

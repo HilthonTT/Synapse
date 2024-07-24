@@ -6,7 +6,9 @@ import { getCommentsByPostId } from "@/actions/comments";
 import { getLikesByPostId } from "@/actions/likes";
 import {
   getFollowerStatsByUserId,
+  getUserById,
   getUserFromAuth,
+  getUserPosts,
   getUsers,
 } from "@/actions/user";
 
@@ -111,6 +113,26 @@ export const useGetUserFollowerStats = (userId: string) => {
   const query = useQuery({
     queryKey: [QUERY_KEYS.GET_USER_FOLLOWER_STATS],
     queryFn: async () => await getFollowerStatsByUserId(userId),
+  });
+
+  return query;
+};
+
+export const useGetUserById = (id: string) => {
+  const query = useQuery({
+    enabled: !!id,
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID, { id }],
+    queryFn: async () => await getUserById(id),
+  });
+
+  return query;
+};
+
+export const useGetUserPosts = (userId: string) => {
+  const query = useQuery({
+    enabled: !!userId,
+    queryKey: [QUERY_KEYS.GET_USER_POSTS, { userId }],
+    queryFn: async () => await getUserPosts(userId),
   });
 
   return query;

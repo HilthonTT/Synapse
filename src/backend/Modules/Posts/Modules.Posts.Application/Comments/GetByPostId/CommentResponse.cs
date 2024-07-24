@@ -6,6 +6,6 @@ public sealed record CommentResponse(
     Guid Id,
     Guid PostId,
     string Content,
-    UserResponse User,
+    UserApiResponse User,
     DateTime CreatedOnUtc,
     DateTime? ModifiedOnUtc);

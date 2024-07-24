@@ -16,7 +16,7 @@ internal sealed class RemoveCommentCommandHandler(
 {
     public async Task<Result> Handle(RemoveCommentCommand request, CancellationToken cancellationToken)
     {
-        UserResponse? user = await usersApi.GetAsync(request.UserId, cancellationToken);
+        UserApiResponse? user = await usersApi.GetAsync(request.UserId, cancellationToken);
         if (user is null)
         {
             return Result.Failure(UserErrors.NotFound(request.UserId));

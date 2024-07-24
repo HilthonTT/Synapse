@@ -4,7 +4,7 @@ import { IconHeartFilled, IconMessageDots } from "@tabler/icons-react";
 import { PinContainer } from "@/components/ui/3d-pin";
 
 type Props = {
-  post: SearchPost;
+  post: SearchPost | Post;
 };
 
 export const PostCard = ({ post }: Props) => {
