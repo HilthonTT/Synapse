@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 
+import { useDeletePost } from "@/features/posts/api/mutations/use-delete-post";
+
 import { Loader } from "@/components/loader";
 import {
   ModalContent,
@@ -10,7 +12,6 @@ import {
 } from "@/components/ui/animated-modal";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { useToast } from "@/components/ui/use-toast";
-import { useDeletePost } from "@/lib/react-query/mutations";
 
 type Props = {
   postId: string;

@@ -2,7 +2,10 @@
 
 import { redirect } from "next/navigation";
 
-import { useGetPostBydId, useGetPostComments } from "@/lib/react-query/queries";
+import { useGetPostBydId } from "@/features/posts/api/queries/use-get-post-by-id";
+
+import { useGetPostComments } from "@/features/comments/api/queries/use-get-post-comments";
+
 import { DirectionAwareHover } from "@/components/ui/direction-aware-hover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "@/components/loader";
@@ -19,6 +22,7 @@ type Props = {
 
 const PostIdPage = ({ params: { postId } }: Props) => {
   const { data: post, isLoading: postLoading } = useGetPostBydId(postId);
+
   const { data: comments, isLoading: commentLoading } =
     useGetPostComments(postId);
 

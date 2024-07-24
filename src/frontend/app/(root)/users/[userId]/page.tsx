@@ -3,13 +3,13 @@
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 
+import { useGetUserFromAuth } from "@/features/users/api/queries/use-get-user-from-auth";
+import { useGetUserFollowerStats } from "@/features/users/api/queries/use-get-user-follower-stats";
+import { useGetUserById } from "@/features/users/api/queries/use-get-user-by-id";
+
+import { useGetUserPosts } from "@/features/posts/api/queries/use-get-user-posts";
+
 import { Loader } from "@/components/loader";
-import {
-  useGetUserById,
-  useGetUserFollowerStats,
-  useGetUserFromAuth,
-  useGetUserPosts,
-} from "@/lib/react-query/queries";
 import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/post-card";
 

@@ -6,9 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
+import { useCreatePost } from "@/features/posts/api/mutations/use-create-post";
+import { useUpdatePost } from "@/features/posts/api/mutations/use-update-post";
+
 import { cn } from "@/lib/utils";
 import { PostValidation } from "@/lib/validation";
-import { useCreatePost, useUpdatePost } from "@/lib/react-query/mutations";
 import { Form } from "@/components/ui/form";
 import { STEPS } from "@/components/modals/form-post-modal";
 import { ImageStep } from "@/components/form/post-form/image-step";

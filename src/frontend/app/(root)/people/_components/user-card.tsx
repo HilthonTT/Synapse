@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 
+import { useGetUserFollowerStats } from "@/features/users/api/queries/use-get-user-follower-stats";
+
 import { Loader } from "@/components/loader";
 import { Button } from "@/components/ui/button";
 import { EvervaultCard, Icon } from "@/components/ui/evervault-card";
-import { useGetUserFollowerStats } from "@/lib/react-query/queries";
 import { formatFollowerCountLabel } from "@/lib/utils";
 
 type Props = {

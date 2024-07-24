@@ -1,14 +1,13 @@
 "use client";
 
+import { useGetUsers } from "@/features/users/api/queries/use-get-users";
+
 import { Loader } from "@/components/loader";
-import { useGetUsers } from "@/lib/react-query/queries";
 
 import { UserCard } from "./_components/user-card";
 
 const PeoplePage = () => {
   const { data: users, isLoading } = useGetUsers();
-
-  console.log(users);
 
   return (
     <div className="flex flex-col flex-1 size-full overflow-y-auto custom-scrollbar">

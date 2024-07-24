@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { IconCirclePlus } from "@tabler/icons-react";
 
+import { useGetUserFromAuth } from "@/features/users/api/queries/use-get-user-from-auth";
+
 import { cn } from "@/lib/utils";
 import { LeftSidebarLinks } from "@/constants";
 import { Loader } from "@/components/loader";
@@ -16,7 +18,8 @@ import { FormPostModal } from "@/components/modals/form-post-modal";
 export const LeftSidebar = () => {
   const pathname = usePathname();
 
-  const { user, isLoaded, isSignedIn } = useUser();
+  const { data: user, isLoading } = useGetUserFromAuth();
+  const { isLoaded, isSignedIn } = useUser();
 
   return (
     <nav className="left-sidebar">
@@ -63,20 +66,22 @@ export const LeftSidebar = () => {
             </li>
           </FormPostModal>
 
-          {isLoaded && isSignedIn && (
+          {isLoaded && isSignedIn && !isLoading && (
             <li
               className={cn(
                 "sidebar-link",
                 pathname === "/profile" && "bg-neutral-900 hover:bg-neutral-800"
               )}>
-              <Link href="/profile" className="flex gap-4 items-center p-3">
+              <Link
+                href={`/users/${user?.id}`}
+                className="flex gap-4 items-center p-3">
                 <Image
-                  src={user.imageUrl}
-                  alt={user.username || "user"}
+                  src={user?.imageUrl || ""}
+                  alt={user?.username || "user"}
                   width={30}
                   height={30}
                 />
-                <p className="base-medium capitalize">{user.username}</p>
+                <p className="base-medium capitalize">{user?.username}</p>
               </Link>
             </li>
           )}

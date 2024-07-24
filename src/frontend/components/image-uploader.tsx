@@ -4,7 +4,8 @@ import Image from "next/image";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { useCallback, useRef, useState, useTransition } from "react";
 
-import { uploadFile } from "@/actions/blob";
+import { uploadFile } from "@/actions/blob/upload-file";
+
 import { cn, getBase64 } from "@/lib/utils";
 
 type Props = {

@@ -9,14 +9,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { useGetUserFromAuth } from "@/features/users/api/queries/use-get-user-from-auth";
+
+import { useDeleteComment } from "@/features/comments/api/mutations/use-delete-comment";
+import { useUpdateComment } from "@/features/comments/api/mutations/use-update-comment";
+
 import { CommentValidation } from "@/lib/validation";
-import { useGetUserFromAuth } from "@/lib/react-query/queries";
 import { Loader } from "@/components/loader";
 import { Button } from "@/components/ui/button";
-import {
-  useDeleteComment,
-  useUpdateComment,
-} from "@/lib/react-query/mutations";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +25,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { EmojiPicker } from "@/components/emoji-picker";
 import { useToast } from "@/components/ui/use-toast";
+import { EmojiPicker } from "@/components/emoji-picker";
 
 type Props = {
   comment: PostComment;
@@ -123,7 +123,7 @@ export const CommentCard = ({ comment }: Props) => {
     form.reset({
       content: comment.content,
     });
-  }, [comment.content]);
+  }, [comment.content, form]);
 
   return (
     <div className="flex items-center mb-8">

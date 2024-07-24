@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { useGetInfinitePosts } from "@/lib/react-query/queries";
+import { useGetInfinitePosts } from "@/features/posts/api/queries/use-get-infinite-posts";
+
 import { LayoutGrid } from "@/components/ui/layout-grid";
 import { SearchInput } from "@/components/search-input";
 import { Loader } from "@/components/loader";

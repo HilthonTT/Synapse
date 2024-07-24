@@ -2,12 +2,12 @@ import https from "https";
 import axios from "axios";
 import { auth } from "@clerk/nextjs/server";
 
-import { BaseApiUrl, jwtTemplate } from "@/constants";
+import { BASE_API_URL, JWT_TEMPLATE } from "@/constants";
 
 export const createAxiosInstance = async (url?: string) => {
   const { getToken } = auth();
 
-  const token = await getToken({ template: jwtTemplate });
+  const token = await getToken({ template: JWT_TEMPLATE });
 
   let headers;
   if (token) {
@@ -21,7 +21,7 @@ export const createAxiosInstance = async (url?: string) => {
     httpsAgent: new https.Agent({
       rejectUnauthorized: false,
     }),
-    baseURL: url || BaseApiUrl,
+    baseURL: url || BASE_API_URL,
   });
 
   return instance;

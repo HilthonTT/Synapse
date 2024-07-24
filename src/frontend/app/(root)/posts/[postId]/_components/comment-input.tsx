@@ -5,14 +5,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 
+import { useCreateComment } from "@/features/comments/api/mutations/use-create-comment";
+
+import { useLikePost } from "@/features/likes/api/mutations/use-like-post";
+import { useUnlikePost } from "@/features/likes/api/mutations/use-unlike-post";
+import { useGetPostLikes } from "@/features/likes/api/queries/use-get-post-likes";
+
+import { useGetUserFromAuth } from "@/features/users/api/queries/use-get-user-from-auth";
+
 import { hasLiked } from "@/lib/utils";
-import {
-  useCreateComment,
-  useLikePost,
-  useUnlikePost,
-} from "@/lib/react-query/mutations";
 import { CommentValidation } from "@/lib/validation";
-import { useGetPostLikes, useGetUserFromAuth } from "@/lib/react-query/queries";
 import { Loader } from "@/components/loader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

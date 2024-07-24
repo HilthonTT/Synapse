@@ -9,9 +9,10 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
+import { useGetUserFromAuth } from "@/features/users/api/queries/use-get-user-from-auth";
+
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/loader";
-import { useGetUserFromAuth } from "@/lib/react-query/queries";
 import { FormPostModal } from "@/components/modals/form-post-modal";
 import { DeletePostModal } from "@/components/modals/delete-post-modal";
 

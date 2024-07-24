@@ -6,9 +6,11 @@ import {
   IconCirclePlus,
 } from "@tabler/icons-react";
 
-export const BaseApiUrl = process.env.BASE_API_URL!;
+export const BASE_API_URL = process.env.BASE_API_URL!;
 
-export const jwtTemplate = process.env.CLERK_TEMPLATE!;
+export const JWT_TEMPLATE = process.env.CLERK_TEMPLATE!;
+
+export const API_VERSION = process.env.API_VERSION || "v1";
 
 export const LeftSidebarLinks: NavLink[] = [
   {

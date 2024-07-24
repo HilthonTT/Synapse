@@ -1,13 +1,12 @@
 "use client";
 
+import { useSearchPosts } from "@/features/posts/api/queries/use-search-posts";
+import { SortColumn } from "@/features/posts/api/sort-column";
+import { SortOrder } from "@/features/posts/api/sort-order";
+
 import { Loader } from "@/components/loader";
 import { PostCard } from "@/components/post-card";
 import { SearchInput } from "@/components/search-input";
-import {
-  SortColumn,
-  SortOrder,
-  useSearchPosts,
-} from "@/lib/react-query/queries";
 
 type Props = {
   searchParams: {
