@@ -21,8 +21,12 @@ internal sealed class CacheInvalidationUserHandler(ICacheService cacheService) :
 
     private async Task HandleInternal(Guid userId, CancellationToken cancellationToken)
     {
-        await Task.WhenAll(
-            cacheService.RemoveAsync("users", cancellationToken),
-            cacheService.RemoveAsync($"users-{userId}", cancellationToken));
+        var tasks = new List<Task>()
+        {
+            cacheService.RemoveAsync(CacheKeys.Users.UserList, cancellationToken),
+            cacheService.RemoveAsync(CacheKeys.Users.Id(userId), cancellationToken)
+        };
+
+        await Task.WhenAll(tasks);
     }
 }

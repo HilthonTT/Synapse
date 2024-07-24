@@ -25,7 +25,7 @@ public static class UserQueries
     }
 
     public static async Task<UserResponse?> GetByIdAsync(
-        IDbConnection connection, 
+        IDbConnection connection,
         Guid userId)
     {
         const string sql =
@@ -42,7 +42,7 @@ public static class UserQueries
             """;
 
         UserResponse? user = await connection.QueryFirstOrDefaultAsync<UserResponse>(
-            sql, 
+            sql,
             new { UserId = userId });
 
         return user;

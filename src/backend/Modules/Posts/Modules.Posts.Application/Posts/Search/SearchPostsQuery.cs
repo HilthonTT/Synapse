@@ -9,7 +9,7 @@ public sealed record SearchPostsQuery(
     SortColumn SortColumn,
     int Limit) : ICachedQuery<List<SearchPostResponse>>
 {
-    public string CacheKey => $"posts-search-{SearchTerm}-order-{SortOrder}-column-{SortColumn}";
+    public string CacheKey => CacheKeys.Posts.Search(SearchTerm, (int)SortOrder, (int)SortColumn);
 
-    public TimeSpan? Expiration => TimeSpan.FromMinutes(20);
+    public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
 }

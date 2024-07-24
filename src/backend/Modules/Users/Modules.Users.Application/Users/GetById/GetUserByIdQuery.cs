@@ -4,7 +4,7 @@ namespace Modules.Users.Application.Users.GetById;
 
 public sealed record GetUserByIdQuery(Guid UserId) : ICachedQuery<UserResponse>
 {
-    public string CacheKey => $"users-{UserId}";
+    public string CacheKey => CacheKeys.Users.Id(UserId);
 
-    public TimeSpan? Expiration => TimeSpan.FromMinutes(20);
+    public TimeSpan? Expiration => TimeSpan.FromMinutes(10);
 }

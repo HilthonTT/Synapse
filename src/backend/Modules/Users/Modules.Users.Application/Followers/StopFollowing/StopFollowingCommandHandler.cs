@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
@@ -10,6 +11,7 @@ internal sealed class StopFollowingCommandHandler(
     IUserRepository userRepository,
     IFollowerService followerService,
     IFollowerRepository followerRepository,
+    IPublisher publisher,
     IUnitOfWork unitOfWork) : ICommandHandler<StopFollowingCommand>
 {
     public async Task<Result> Handle(StopFollowingCommand request, CancellationToken cancellationToken)
@@ -36,9 +38,13 @@ internal sealed class StopFollowingCommandHandler(
             return result;
         }
 
-        followerRepository.Remove(result.Value);
+        Follower follower = result.Value;
+
+        followerRepository.Remove(follower);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new FollowingStoppedEvent(follower.UserId), cancellationToken);
 
         return Result.Success();
     }

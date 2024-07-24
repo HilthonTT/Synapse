@@ -2,4 +2,4 @@
 
 namespace Modules.Posts.Application.Posts.Create;
 
-internal sealed record PostCreatedEvent(Guid PostId) : INotification;
+internal sealed record PostCreatedEvent(Guid PostId, Guid UserId) : INotification;

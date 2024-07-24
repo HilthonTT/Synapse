@@ -28,6 +28,6 @@ internal sealed class CacheInvalidationCommentHandler(ICacheService cacheService
 
     private async Task HandleInternal(Guid postId, CancellationToken cancellationToken)
     {
-        await cacheService.RemoveAsync($"posts-comments-{postId}", cancellationToken);
+        await cacheService.RemoveAsync(CacheKeys.Comments.PostId(postId), cancellationToken);
     }
 }

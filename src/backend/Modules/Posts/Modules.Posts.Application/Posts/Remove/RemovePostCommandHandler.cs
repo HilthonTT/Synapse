@@ -38,7 +38,7 @@ internal sealed class RemovePostCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await publisher.Publish(new PostRemovedEvent(post.Id), cancellationToken);
+        await publisher.Publish(new PostRemovedEvent(post.Id, post.UserId), cancellationToken);
 
         return Result.Success();
     }

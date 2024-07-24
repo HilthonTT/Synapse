@@ -42,7 +42,7 @@ internal sealed class UpdatePostCommandHandler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await publisher.Publish(new PostUpdatedEvent(post.Id), cancellationToken);
+        await publisher.Publish(new PostUpdatedEvent(post.Id, post.UserId), cancellationToken);
 
         return Result.Success();
     }

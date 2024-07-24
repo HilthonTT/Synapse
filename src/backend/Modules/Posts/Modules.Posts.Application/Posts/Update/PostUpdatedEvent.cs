@@ -2,4 +2,4 @@
 
 namespace Modules.Posts.Application.Posts.Update;
 
-internal sealed record PostUpdatedEvent(Guid PostId) : INotification;
+internal sealed record PostUpdatedEvent(Guid PostId, Guid UserId) : INotification;

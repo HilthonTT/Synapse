@@ -1,4 +1,5 @@
-﻿using Modules.Users.Application.Abstractions.Data;
+﻿using MediatR;
+using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Application.Followers.StartFollowing;
 using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
@@ -18,6 +19,7 @@ public sealed class StartFollowingCommandTests
     private readonly IFollowerService _followerServiceMock;
     private readonly IFollowerRepository _followerRepositoryMock;
     private readonly IUnitOfWork _unitOfWorkMock;
+    private readonly IPublisher _publisherMock;
 
     public StartFollowingCommandTests()
     {
@@ -25,11 +27,13 @@ public sealed class StartFollowingCommandTests
         _followerRepositoryMock = Substitute.For<IFollowerRepository>();
         _followerServiceMock = Substitute.For<IFollowerService>();
         _unitOfWorkMock = Substitute.For<IUnitOfWork>();
+        _publisherMock = Substitute.For<IPublisher>();
 
         _handler = new StartFollowingCommandHandler(
             _userRepositoryMock,
             _followerServiceMock,
             _followerRepositoryMock,
+            _publisherMock,
             _unitOfWorkMock);
     }
 
@@ -168,5 +172,25 @@ public sealed class StartFollowingCommandTests
 
         // Assert
         await _unitOfWorkMock.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task Handle_Should_CallPublisher_WhenStartFollowing_DoesNotFail()
+    {
+        // Assert
+        _userRepositoryMock.GetByIdAsync(Command.UserId)
+           .Returns(User);
+
+        _userRepositoryMock.GetByIdAsync(Command.FollowedId)
+            .Returns(User);
+
+        _followerServiceMock.StartFollowingAsync(User, User, default)
+            .Returns(Follower.Create(Command.UserId, Command.FollowedId, DateTime.UtcNow));
+
+        // Act
+        await _handler.Handle(Command, default);
+
+        // Assert
+        await _publisherMock.Received(1).Publish(Arg.Any<FollowingStartedEvent>(), Arg.Any<CancellationToken>());
     }
 }

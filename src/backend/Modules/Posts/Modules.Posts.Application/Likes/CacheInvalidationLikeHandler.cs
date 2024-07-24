@@ -19,8 +19,8 @@ internal sealed class CacheInvalidationLikeHandler(ICacheService cacheService) :
         return HandleInternal(notification.PostId, cancellationToken);
     }
 
-    private async Task HandleInternal(Guid PostId, CancellationToken cancellationToken)
+    private async Task HandleInternal(Guid postId, CancellationToken cancellationToken)
     {
-        await cacheService.RemoveAsync($"posts-likes-{PostId}", cancellationToken);
+        await cacheService.RemoveAsync(CacheKeys.Likes.PostId(postId), cancellationToken);
     }
 }

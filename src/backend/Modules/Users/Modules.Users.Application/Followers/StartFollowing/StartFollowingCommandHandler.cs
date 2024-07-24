@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Messaging;
+using MediatR;
 using Modules.Users.Application.Abstractions.Data;
 using Modules.Users.Domain.Followers;
 using Modules.Users.Domain.Users;
@@ -10,6 +11,7 @@ internal sealed class StartFollowingCommandHandler(
     IUserRepository userRepository,
     IFollowerService followerService,
     IFollowerRepository followerRepository,
+    IPublisher publisher,
     IUnitOfWork unitOfWork) : ICommandHandler<StartFollowingCommand>
 {
     public async Task<Result> Handle(
@@ -38,9 +40,13 @@ internal sealed class StartFollowingCommandHandler(
             return result;
         }
 
-        followerRepository.Insert(result.Value);
+        Follower follower = result.Value;
+
+        followerRepository.Insert(follower);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await publisher.Publish(new FollowingStartedEvent(follower.UserId), cancellationToken);
 
         return Result.Success();
     }

@@ -2,4 +2,4 @@
 
 namespace Modules.Posts.Application.Posts.Remove;
 
-internal sealed record PostRemovedEvent(Guid PostId) : INotification;
+internal sealed record PostRemovedEvent(Guid PostId, Guid UserId) : INotification;
