@@ -24,11 +24,6 @@ export const LeftSidebarLinks: NavLink[] = [
     icon: IconSearch,
   },
   {
-    href: "/saved",
-    label: "Saves",
-    icon: IconDeviceFloppy,
-  },
-  {
     href: "/people",
     label: "People",
     icon: IconUsers,

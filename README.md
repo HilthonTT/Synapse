@@ -1,4 +1,3 @@
-
 <div align="center">
   <br />
   <img src="https://github.com/user-attachments/assets/a46953ad-6b84-425a-8ff0-6bf058b1f78a" alt="Project banner"/>
@@ -88,7 +87,7 @@ Make sure you have the following installed on your machine:
 git clone https://github.com/HilthonTT/Synapse.git
 ```
 
-***Frontend***
+**_Frontend_**
 
 Navigate to the frontend directory:
 
@@ -117,16 +116,20 @@ NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 BASE_API_URL="https://localhost:7173/synapse"
 API_VERSION="v1"
 CLERK_TEMPLATE="synapse"
+
+SENTRY_AUTH_TOKEN=""
 ```
 
-Replace the placeholder values with your actual clerk credentials. You can obtain these by creating an accoun on the [Clerk Website](https://clerk.com).
+Replace the placeholder values with your actual clerk credentials. You can obtain these by creating an account on the [Clerk Website](https://clerk.com).
+
+Replace the SENTRY_AUTH_TOKEN with your sentry.io's token on the [Sentry Website](https://sentry.io)
 
 **Set up a Clerk JWT Template**
 
 Setup a Clerk JWT Template named "synapse" and have those specific fields:
 
 <div align="center">
-  ![image](https://github.com/user-attachments/assets/3f44b50a-f024-4495-bb28-e57d4fa068f0)
+  <img src="https://github.com/user-attachments/assets/3f44b50a-f024-4495-bb28-e57d4fa068f0" alt="template" />
 </div>
 
 **Running the Project**
@@ -137,7 +140,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
-***Backend***
+**_Backend_**
 
 Navigate to the backend directory:
 
