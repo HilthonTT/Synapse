@@ -1,7 +1,5 @@
 "use client";
 
-import { redirect } from "next/navigation";
-
 import { useGetPostBydId } from "@/features/posts/api/queries/use-get-post-by-id";
 
 import { useGetPostComments } from "@/features/comments/api/queries/use-get-post-comments";
@@ -9,6 +7,7 @@ import { useGetPostComments } from "@/features/comments/api/queries/use-get-post
 import { DirectionAwareHover } from "@/components/ui/direction-aware-hover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader } from "@/components/loader";
+import NotFound from "@/app/not-found";
 
 import { CommentInput } from "./_components/comment-input";
 import { CommentCard } from "./_components/comment-card";
@@ -35,7 +34,7 @@ const PostIdPage = ({ params: { postId } }: Props) => {
   }
 
   if (!post) {
-    return redirect("/");
+    return <NotFound />;
   }
 
   return (

@@ -21,7 +21,7 @@ const PeoplePage = () => {
 
       <div className="flex flex-wrap items-center justify-center md:justify-normal w-full p-8 gap-16">
         {users?.map((user) => (
-          <UserCard key={"id"} user={user} />
+          <UserCard key={user.id} user={user} />
         ))}
       </div>
     </div>

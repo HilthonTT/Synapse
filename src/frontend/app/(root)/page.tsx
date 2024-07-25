@@ -8,6 +8,7 @@ import { useGetInfinitePosts } from "@/features/posts/api/queries/use-get-infini
 import { LayoutGrid } from "@/components/ui/layout-grid";
 import { SearchInput } from "@/components/search-input";
 import { Loader } from "@/components/loader";
+import { PeopleHeader } from "@/components/people-header";
 
 const HomePage = () => {
   const { ref, inView } = useInView();
@@ -38,6 +39,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col flex-1 items-center size-full overflow-y-auto custom-scrollbar">
       <h2 className="h3-bold md:h2-bold w-full px-5 py-4">Explore posts</h2>
+      <PeopleHeader />
       <SearchInput />
       <LayoutGrid cards={cards} />
       <div

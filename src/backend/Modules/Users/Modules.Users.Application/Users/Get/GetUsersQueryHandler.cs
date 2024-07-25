@@ -12,7 +12,7 @@ internal sealed class GetUsersQueryHandler(IDbConnectionFactory factory)
     {
         using IDbConnection connection = factory.GetOpenConnection();
 
-        List<UserResponse> users = await UserQueries.GetAsync(connection);
+        List<UserResponse> users = await UserQueries.GetAsync(connection, request.Limit);
 
         return users;
     }

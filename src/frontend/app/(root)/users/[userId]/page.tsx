@@ -12,6 +12,9 @@ import { useGetUserPosts } from "@/features/posts/api/queries/use-get-user-posts
 import { Loader } from "@/components/loader";
 import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/post-card";
+import { cn } from "@/lib/utils";
+
+import NotFound from "@/app/not-found";
 
 const StatBlock = ({
   value,
@@ -63,7 +66,7 @@ const UserIdPage = ({ params }: Props) => {
   }
 
   if (!user || !followerStats) {
-    return <div>Not found...</div>;
+    return <NotFound />;
   }
 
   return (
@@ -72,11 +75,14 @@ const UserIdPage = ({ params }: Props) => {
         <div className="relative flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
           {currentUser?.id !== user.id && (
             <Image
-              src={user?.imageUrl}
+              src={user?.imageUrl || "/profile-image.png"}
               alt={user?.username}
               width={140}
               height={140}
-              className="rounded-full"
+              className={cn(
+                "rounded-full object-cover",
+                !user.imageUrl && "bg-white p-0.5"
+              )}
             />
           )}
           {currentUser?.id === user.id && (

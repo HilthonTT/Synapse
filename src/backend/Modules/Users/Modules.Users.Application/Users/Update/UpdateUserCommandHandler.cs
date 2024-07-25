@@ -25,11 +25,6 @@ internal sealed class UpdateUserCommandHandler(
             return Result.Failure<Guid>(emailResult.Error);
         }
 
-        if (!await userRepository.IsEmailUniqueAsync(emailResult.Value, cancellationToken))
-        {
-            return Result.Failure<Guid>(UserErrors.EmailNotUnique);
-        }
-
         Result<Username> usernameResult = Username.Create(request.Username);
         if (usernameResult.IsFailure)
         {

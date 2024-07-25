@@ -1,13 +1,16 @@
 ﻿using System.Data;
+using System.Text;
 using Dapper;
 
 namespace Modules.Users.Application.Users;
 
 public static class UserQueries
 {
-    public static async Task<List<UserResponse>> GetAsync(IDbConnection connection)
+    public static async Task<List<UserResponse>> GetAsync(
+        IDbConnection connection, 
+        int? limit)
     {
-        const string sql =
+        StringBuilder sql = new(
             """
             SELECT
                 u.id AS Id,
@@ -17,9 +20,17 @@ public static class UserQueries
                 u.created_on_utc AS CreatedOnUtc,
                 u.modified_on_utc AS ModifiedOnUtc
             FROM users.users u
-            """;
+            """
+        );
 
-        IEnumerable<UserResponse> users = await connection.QueryAsync<UserResponse>(sql);
+        if (limit.HasValue)
+        {
+            sql.Append(" LIMIT @Limit");
+        }
+
+        IEnumerable<UserResponse> users = await connection.QueryAsync<UserResponse>(
+            sql.ToString(),
+            new { Limit = limit });
 
         return users.ToList();
     }

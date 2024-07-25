@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import { IconCirclePlus } from "@tabler/icons-react";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { IconCirclePlus, IconLogin } from "@tabler/icons-react";
 
 import { useGetUserFromAuth } from "@/features/users/api/queries/use-get-user-from-auth";
 
@@ -76,10 +76,14 @@ export const LeftSidebar = () => {
                 href={`/users/${user?.id}`}
                 className="flex gap-4 items-center p-3">
                 <Image
-                  src={user?.imageUrl || ""}
+                  src={user?.imageUrl || "/profile-image.png"}
                   alt={user?.username || "user"}
                   width={30}
                   height={30}
+                  className={cn(
+                    "rounded-full object-cover",
+                    !user?.imageUrl && "bg-white p-0.5"
+                  )}
                 />
                 <p className="base-medium capitalize">{user?.username}</p>
               </Link>
@@ -90,6 +94,17 @@ export const LeftSidebar = () => {
             <li className="sidebar-link flex p-3">
               <Loader />
               <Skeleton className="h-7 w-24" />
+            </li>
+          )}
+
+          {isLoaded && !isSignedIn && (
+            <li className="sidebar-link">
+              <SignInButton mode="modal">
+                <div className="flex gap-4 items-center p-3">
+                  <IconLogin />
+                  <p className="base-medium">Login</p>
+                </div>
+              </SignInButton>
             </li>
           )}
         </ul>
